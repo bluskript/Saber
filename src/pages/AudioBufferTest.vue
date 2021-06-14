@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, defineProps, ref, watch } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
-import Display from './Display.vue'
+import SynthDisplay from './SynthDisplay.vue'
 import Card from '~/components/Card.vue'
-import { applyVolume, combine, detunedSaw, sawTooth, square } from '~/logic/synth'
+import { applyVolume, combine, detunedSaw, sawTooth, sine, square, triangle } from '~/logic/synth'
 import type { SynthFn, FreqSynthFn } from '~/logic/synth'
 import HSlider from '~/components/HSlider.vue'
 import { keys } from '~/logic/keysound'
@@ -19,13 +19,18 @@ const synthFn = computed(() => props.synthFn)
 
 const volume = ref(0.1)
 const octave = ref(0)
+const detuneVoices = ref(7)
+const detunePercent = ref(0.25)
+
 const selectedSynth = ref<string | undefined>(undefined)
 const synths: {
   [name: string]: FreqSynthFn
 } = {
+  'sine': sine,
   'saw': sawTooth,
-  'detuned saw': freq => detunedSaw(freq, 7, 0.25),
   'square': square,
+  'triangle': triangle,
+  'detuned saw': freq => detunedSaw(freq, detuneVoices.value, detunePercent.value),
 }
 
 let freqSynth: FreqSynthFn | undefined
@@ -50,7 +55,7 @@ const updateSynthFn = () => {
   )
 }
 
-watch([selectedSynth, octave, volume], updateSynthFn)
+watch([selectedSynth, octave, volume, detuneVoices, detunePercent], updateSynthFn)
 
 const setSelectedSynth = (name: string) => {
   freqSynth = synths[name]
@@ -76,13 +81,12 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
     </h2>
     <div class="flex">
       <div class="w-full md:w-min">
-        <div class="flex">
+        <div class="flex flex-wrap w-64 gap-2">
           <HBtn
             v-for="(_, synthName) in synths"
             :key="synthName"
             :variant="selectedSynth === synthName ? 'active' : 'outlined'"
             color="primary"
-            class="mr-2"
             @click="setSelectedSynth(synthName)"
           >
             {{ synthName }}
@@ -92,9 +96,15 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
         <HSlider v-model="volume" class="mb-6" min="0" max="1" step="0.01" />
         <label class="text-sm">Octave</label>
         <HSlider v-model="octave" class="mb-6" min="-6" max="6" step="1" />
+        <div v-show="selectedSynth === 'detuned saw'">
+          <label class="text-sm">Voices</label>
+          <HSlider v-model="detuneVoices" class="mb-6" min="0" max="20" step="1" />
+          <label class="text-sm">Detune %</label>
+          <HSlider v-model="detunePercent" class="mb-6" min="0" max="1" step="0.01" />
+        </div>
       </div>
       <div class="flex-1 px-3">
-        <Display :fn="synthFn" />
+        <SynthDisplay :fn="synthFn" />
       </div>
     </div>
   </Card>

@@ -10,16 +10,16 @@ const props = defineProps<{
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 const drawHeight = ref(0.5)
-const sampleSize = ref(256)
-let renderer: SynthRenderer | undefined
+const sampleSize = ref(8)
 
 const fn = computed(() => props.fn)
+const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
 
 onMounted(() => {
   if (!canvas.value) return
   const ctx = canvas.value.getContext('2d')
   if (ctx === null) return
-  renderer = new SynthRenderer(ctx, fn, drawHeight, sampleSize)
+  const renderer = new SynthRenderer(ctx, fn, drawHeight, actualSampleSize)
 })
 </script>
 
@@ -31,6 +31,6 @@ onMounted(() => {
   </div>
   <div class="flex mt-3 items-center">
     <span class="mr-2">Sample Size</span>
-    <HSlider v-model="sampleSize" min="128" max="4096" step="32" class="w-min" />
+    <HSlider v-model="sampleSize" min="6" max="12" step="1" class="w-min" />
   </div>
 </template>

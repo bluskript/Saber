@@ -1,9 +1,9 @@
 import { Ref } from '@vue/reactivity'
+import { fft, inverseFFT } from './fft'
+import { CanvasRenderer } from './renderer'
 import { SynthFn } from './synth'
 
-export class SynthRenderer {
-  ctx: CanvasRenderingContext2D
-  canvas: HTMLCanvasElement
+export class SynthRenderer extends CanvasRenderer {
   sampleRate: number
   sampleSize: Ref<number>
   drawHeight: Ref<number>
@@ -15,21 +15,12 @@ export class SynthRenderer {
     drawHeight: Ref<number>,
     sampleSize: Ref<number>,
   ) {
-    this.ctx = ctx
+    super(ctx)
     this.fn = fn
     this.drawHeight = drawHeight
     this.sampleSize = sampleSize
     this.canvas = ctx.canvas
     this.sampleRate = 44100
-    this.canvas.width = 1024
-    this.canvas.height = 576
-
-    requestAnimationFrame(() => this.renderLoop())
-  }
-
-  line(x1: number, y1: number, x2: number, y2: number) {
-    this.ctx.moveTo(x1 + 0.5, y1 + 0.5)
-    this.ctx.lineTo(x2 + 0.5, y2 + 0.5)
   }
 
   drawAxes() {
@@ -57,21 +48,23 @@ export class SynthRenderer {
     this.ctx.strokeStyle = '#60a5fa'
     this.ctx.lineWidth = 4
     this.ctx.beginPath()
+    this.drawArray([...arr], step)
+    this.ctx.stroke()
+  }
+
+  drawArray(arr: Array<number>, step: number) {
     arr.forEach((v, i) => {
       if (i === arr.length - 1) return
       const currHeight = this.relativeToAxis(v)
       const nextHeight = this.relativeToAxis(arr[i + 1])
       this.line(step * i, currHeight, step * (i + 1), nextHeight)
     })
-    this.ctx.stroke()
   }
 
   renderLoop() {
-    this.ctx.fillStyle = 'black'
-    this.ctx.fillRect(0, 0, 1920, 1080)
+    super.renderLoop()
     if (this.fn.value)
       this.drawSynthFn(this.fn.value)
     this.drawAxes()
-    requestAnimationFrame(() => this.renderLoop())
   }
 }

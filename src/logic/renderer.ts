@@ -1,0 +1,31 @@
+export class CanvasRenderer {
+  ctx: CanvasRenderingContext2D
+  canvas: HTMLCanvasElement
+
+  constructor(
+    ctx: CanvasRenderingContext2D,
+  ) {
+    this.ctx = ctx
+    this.canvas = ctx.canvas
+    this.canvas.width = 1024
+    this.canvas.height = 576
+
+    requestAnimationFrame(() => this.renderLoop())
+  }
+
+  point(x: number, y: number, color: string) {
+    this.ctx.fillStyle = color
+    this.ctx.fillRect(x, y, 1, 1)
+  }
+
+  line(x1: number, y1: number, x2: number, y2: number) {
+    this.ctx.moveTo(x1 + 0.5, y1 + 0.5)
+    this.ctx.lineTo(x2 + 0.5, y2 + 0.5)
+  }
+
+  renderLoop() {
+    this.ctx.fillStyle = 'black'
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+    requestAnimationFrame(() => this.renderLoop())
+  }
+}

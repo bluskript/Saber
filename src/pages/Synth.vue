@@ -28,6 +28,6 @@ const setSynthFn = (fn: SynthFn) => {
 <template>
   <div class="p-3">
     <AudioBufferTest :set-synth-fn="setSynthFn" :synth-fn="synthFn" class="mb-3" />
-    <FourierTransform :set-synth-fn="setSynthFn" />
+    <FourierTransform :set-synth-fn="setSynthFn" :synth-fn="synthFn" />
   </div>
 </template>

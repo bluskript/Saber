@@ -51,7 +51,7 @@ export const sawTooth = (frequency = 512, phaseStart = 0): SynthFn => {
  * @param frequency the frequency of the original saw
  * @param voices the number of saws
  * @param detune the percentage of detune
- * @returns an array of saws
+ * @returns a combined array of saws
  */
 export const detunedSaw = (frequency = 512, voices = 1, detune = 0, phase = true, phaseAmount = 0): SynthFn => {
   return combine(
@@ -70,6 +70,26 @@ export const square = (frequency = 512): SynthFn => {
       const oscSize = sampleRate / frequency
       const oscPos = (position + i) % oscSize
       channel[i] += (oscPos / oscSize) < 0.5 ? -1 : 1
+    })
+  }
+}
+
+export const sine = (frequency = 512): SynthFn => {
+  return (channel: Float32Array, position: number, sampleRate: number) => {
+    channel.forEach((_, i) => {
+      const oscSize = sampleRate / frequency
+      const oscPos = (position + i) % oscSize
+      channel[i] += Math.sin(oscPos / oscSize * 2 * Math.PI)
+    })
+  }
+}
+
+export const triangle = (frequency = 512): SynthFn => {
+  return (channel: Float32Array, position: number, sampleRate: number) => {
+    channel.forEach((_, i) => {
+      const oscSize = sampleRate / frequency
+      const oscPos = (position + i) % oscSize
+      channel[i] += Math.abs((oscPos / oscSize) % 1 * 2 - 1) - 0.5
     })
   }
 }
