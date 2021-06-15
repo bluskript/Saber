@@ -28,9 +28,12 @@ export class CanvasRenderer {
     this.ctx.lineTo(x2 + 0.5, y2 + 0.5)
   }
 
+  rerender() {
+    requestAnimationFrame(() => this.renderLoop())
+  }
+
   renderLoop() {
     this.ctx.fillStyle = 'black'
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-    requestAnimationFrame(() => this.renderLoop())
   }
 }

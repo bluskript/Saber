@@ -7,6 +7,7 @@ const props = defineProps<{
   floating?: boolean
   flat?: boolean
   dense?: boolean
+  disabled?: boolean
 }>()
 const buttonClasses = computed(() => ({
   btn: true,
@@ -16,12 +17,13 @@ const buttonClasses = computed(() => ({
   floating: props.floating,
   raised: !props.flat,
   dense: props.dense,
+  disabled: props.disabled,
 }))
 </script>
 <template>
-  <button v-wave :class="buttonClasses">
+  <a v-wave :class="buttonClasses">
     <slot />
-  </button>
+  </a>
 </template>
 
 <style lang="postcss" scoped>
@@ -30,7 +32,7 @@ const buttonClasses = computed(() => ({
 }
 
 .secondary {
-  --button-color: theme('colors.secondary.400');
+  --button-color: theme('colors.red.500');
 }
 
 .btn {
@@ -42,7 +44,7 @@ const buttonClasses = computed(() => ({
     @apply p-2 rounded-none;
   }
 
-  &:disabled {
+  &.disabled {
     @apply pointer-events-none;
   }
 }
@@ -93,14 +95,14 @@ const buttonClasses = computed(() => ({
   }
 }
 
-@variants disabled {
-  .btn.text {
+.disabled {
+  &.btn.text {
     @apply text-gray-500;
   }
-  .btn.outlined {
+  &.btn.outlined {
     @apply text-gray-500 border-gray-500;
   }
-  .btn.filled {
+  &.btn.filled {
     @apply bg-gray-400 dark:bg-gray-600 text-gray-500 dark:text-gray-500 bg-opacity-75;
   }
 }

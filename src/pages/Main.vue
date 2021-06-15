@@ -12,7 +12,10 @@ import HSlider from '~/components/HSlider.vue'
 import HBtn from '~/components/HBtn.vue'
 import { randStr } from '~/logic/randstr'
 
-const ctx = new AudioContext()
+let ctx: AudioContext
+
+if (!import.meta.env.SSR)
+  ctx = new AudioContext()
 let position = 0
 
 const volume = ref(0.5)
@@ -104,7 +107,7 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
         </div>
       </div>
       <div class="flex">
-        <div class="bg-light-100 dark:bg-harmonydark-100 overflow-auto">
+        <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2">
           <HBtn variant="text" class="w-full" @click="addOsc">
             <carbon-add />
           </HBtn>

@@ -1,4 +1,5 @@
 import { Ref } from '@vue/reactivity'
+import { computed, watch } from '@vue/runtime-core'
 import { fft, inverseFFT } from './fft'
 import { CanvasRenderer } from './renderer'
 import { SynthFn } from './synth'
@@ -8,6 +9,7 @@ export class SynthRenderer extends CanvasRenderer {
   sampleSize: Ref<number>
   drawHeight: Ref<number>
   fn: Ref<SynthFn | undefined>
+  arr: Ref<Float32Array>
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -21,6 +23,16 @@ export class SynthRenderer extends CanvasRenderer {
     this.sampleSize = sampleSize
     this.canvas = ctx.canvas
     this.sampleRate = 44100
+
+    this.arr = computed(() => {
+      const arr = Float32Array.of(...Array(this.sampleSize.value).fill(0))
+      this.fn.value?.(arr, 0, this.sampleRate)
+      return arr
+    })
+
+    watch([this.fn, this.drawHeight, sampleSize], () => {
+      this.rerender()
+    })
   }
 
   drawAxes() {
@@ -41,14 +53,13 @@ export class SynthRenderer extends CanvasRenderer {
     return halfHeight * this.drawHeight.value * value + halfHeight
   }
 
-  drawSynthFn(fn: SynthFn) {
-    const arr = Float32Array.of(...Array(this.sampleSize.value).fill(0))
-    fn(arr, 0, this.sampleRate)
-    const step = this.canvas.width / arr.length
+  drawSynthFn() {
+    const renderArr = this.arr.value
+    const step = this.canvas.width / renderArr.length
     this.ctx.strokeStyle = '#60a5fa'
     this.ctx.lineWidth = 4
     this.ctx.beginPath()
-    this.drawArray(arr, step)
+    this.drawArray(renderArr, step)
     this.ctx.stroke()
   }
 
@@ -64,7 +75,7 @@ export class SynthRenderer extends CanvasRenderer {
   renderLoop() {
     super.renderLoop()
     if (this.fn.value)
-      this.drawSynthFn(this.fn.value)
+      this.drawSynthFn()
     this.drawAxes()
   }
 }

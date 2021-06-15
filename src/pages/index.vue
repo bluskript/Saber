@@ -13,7 +13,10 @@ import { toggleDark } from '~/logic/dark'
     </h1>
     <HSpacer />
     <HBtn icon variant="text" @click="toggleDark()">
-      <carbon-moon />
+      <mdi-theme-light-dark />
+    </HBtn>
+    <HBtn icon variant="text" target="_blank" href="https://github.com/Bluskript/Saber">
+      <mdi-github />
     </HBtn>
   </NavBar>
   <Main />

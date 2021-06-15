@@ -23,7 +23,12 @@ onMounted(() => {
 
 <template>
   <Card>
-    <span class="mb-2">Use your mouse to pan and zoom</span>
+    <h1 class="text-xl mb-1">
+      Fourier Transform Visualizer
+    </h1>
+    <p class="mb-2">
+      Use your mouse to pan and zoom
+    </p>
     <canvas ref="canvas" class="w-full h-100" />
   </Card>
 </template>

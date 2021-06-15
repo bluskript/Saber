@@ -1,4 +1,4 @@
-class Complex {
+export class Complex {
   r: number
   i: number
 
