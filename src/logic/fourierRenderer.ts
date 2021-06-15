@@ -14,19 +14,27 @@ export class FourierRenderer extends CanvasRenderer {
     super(ctx)
     this.fn = fn
     this.drawScale = drawScale
-    this.canvas.width = 512
-    this.canvas.height = 128
-    this.canvas.onwheel = ev => this.onWheel(ev)
-    this.canvas.onmousedown = () => this.dragging = true
-    this.canvas.onmouseup = () => this.dragging = false
-    this.canvas.onmousemove = (ev) => {
+    this.canvas.addEventListener('wheel', ev => this.onWheel(ev))
+    this.canvas.addEventListener('mousedown', () => this.dragging = true)
+    window.addEventListener('mouseup', () => this.dragging = false)
+    this.canvas.addEventListener('mousemove', (ev) => {
       if (this.dragging) this.onPan(ev)
-    }
+    })
   }
 
   onWheel(ev: WheelEvent) {
     ev.preventDefault()
-    this.drawScale.value *= Math.exp(-ev.deltaY / 500)
+    const delta = Math.exp(-ev.deltaY / 500)
+
+    const x = ev.offsetX
+    const y = ev.offsetY
+    const centeredX = x - this.canvas.width / 2
+    const centeredY = y - this.canvas.height / 2
+    this.offsetX += centeredX
+    this.offsetY += centeredY
+    this.drawScale.value *= delta
+    this.offsetX -= centeredX * delta
+    this.offsetY -= centeredY * delta
   }
 
   onPan(ev: MouseEvent) {

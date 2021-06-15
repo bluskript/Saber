@@ -7,8 +7,13 @@ export class CanvasRenderer {
   ) {
     this.ctx = ctx
     this.canvas = ctx.canvas
-    this.canvas.width = 1024
-    this.canvas.height = 576
+    this.canvas.width = this.canvas.clientWidth
+    this.canvas.height = this.canvas.clientHeight
+
+    this.canvas.addEventListener('resize', () => {
+      this.canvas.width = this.canvas.clientWidth
+      this.canvas.height = this.canvas.clientHeight
+    })
 
     requestAnimationFrame(() => this.renderLoop())
   }

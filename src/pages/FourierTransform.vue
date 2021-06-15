@@ -24,11 +24,7 @@ onMounted(() => {
 
 <template>
   <Card>
-    <h2 class="text-xl mb-3">
-      Exploration with Fast Fourier Transform
-    </h2>
-    <label class="text-sm">Draw Size</label>
-    <HSlider v-model="drawScale" class="mb-6" min="0" max="32" step="1" />
-    <canvas ref="canvas" class="w-full" />
+    <span class="mb-2">Use your mouse to pan and zoom</span>
+    <canvas ref="canvas" class="w-full h-100" />
   </Card>
 </template>
