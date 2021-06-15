@@ -1,5 +1,5 @@
 export type SynthFn = (channel: Float32Array, position: number, sampleRate: number) => void
-export type FreqSynthFn = (freq: number, phase?: number) => SynthFn
+export type FreqSynthFn = (freq: number, phase: number) => SynthFn
 
 export const combine = (...fns: (SynthFn | undefined)[]): SynthFn => {
   return (channel, position, sampleRate) => {

@@ -5,7 +5,7 @@ import { onKeyDown, onKeyUp } from '@vueuse/core'
 import Oscillator from '../components/Main/Oscillator.vue'
 import FourierTransform from '../components/Main/FourierTransform.vue'
 import SynthDisplay from '../components/Main/SynthDisplay.vue'
-import { applyVolume, combine, combineFreqSynths } from '~/logic/synth'
+import { applyVolume, combine, combineFreqSynths, sawTooth } from '~/logic/synth'
 import type { SynthFn, FreqSynthFn } from '~/logic/synth'
 import { keys } from '~/logic/keysound'
 import HSlider from '~/components/HSlider.vue'
@@ -25,7 +25,7 @@ const keysDown = reactive(new Set<string>())
 const synths = reactive<{
   [id: string]: FreqSynthFn | undefined
 }>({
-  initial: undefined,
+  initial: sawTooth,
 })
 const idArr = reactive<string[]>([
   'initial',

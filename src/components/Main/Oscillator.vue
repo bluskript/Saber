@@ -23,7 +23,7 @@ const synths: {
   square,
   triangle,
 }
-const selectedSynthName = ref<string | undefined>(undefined)
+const selectedSynthName = ref<string | undefined>('saw')
 const selectedSynth = computed(() => {
   return selectedSynthName.value ? synths[selectedSynthName.value] : undefined
 })
@@ -38,7 +38,7 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
         freqSynthFn,
         detuneVoices.value,
         detunePercent.value,
-      )(freq),
+      )(freq, 0),
       volume.value,
     )
   }
