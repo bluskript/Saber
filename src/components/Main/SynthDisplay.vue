@@ -9,8 +9,8 @@ const props = defineProps<{
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
-const drawHeight = ref(0.5)
-const sampleSize = ref(8)
+const drawHeight = ref(1.2)
+const sampleSize = ref(10)
 
 const fn = computed(() => props.fn)
 const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
@@ -24,8 +24,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card>
-    <canvas ref="canvas" class="w-full" />
+  <Card class="flex flex-col">
+    <canvas ref="canvas" class="w-full flex-1" />
     <HSlider
       v-model="drawHeight"
       label="Draw Height"

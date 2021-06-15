@@ -22,13 +22,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card>
+  <Card class="flex flex-col">
     <h1 class="text-xl mb-1">
       Fourier Transform Visualizer
     </h1>
     <p class="mb-2">
       Use your mouse to pan and zoom
     </p>
-    <canvas ref="canvas" class="w-full h-100" />
+    <canvas ref="canvas" class="w-full flex-1" />
   </Card>
 </template>

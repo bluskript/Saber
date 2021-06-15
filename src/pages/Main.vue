@@ -138,7 +138,9 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
         </div>
       </div>
     </Card>
-    <SynthDisplay :fn="synthFn" class="mb-2" />
-    <FourierTransform :synth-fn="synthFn" />
+    <div class="grid lg:grid-cols-2 auto-rows-fr">
+      <SynthDisplay :fn="synthFn" class="mb-2" />
+      <FourierTransform :synth-fn="synthFn" />
+    </div>
   </div>
 </template>
