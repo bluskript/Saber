@@ -1,9 +1,22 @@
 export type SynthFn = (channel: Float32Array, position: number, sampleRate: number) => void
 export type FreqSynthFn = (freq: number) => SynthFn
 
-export const combine = (...fns: SynthFn[]): SynthFn => {
+export const combine = (...fns: (SynthFn | undefined)[]): SynthFn => {
   return (channel, position, sampleRate) => {
-    fns.forEach(fn => fn(channel, position, sampleRate))
+    fns.forEach((fn) => {
+      if (!fn) return
+      const copied = channel.slice(0)
+      fn(copied, position, sampleRate)
+      channel.forEach((_, i) => channel[i] += copied[i])
+    })
+  }
+}
+
+export const combineFreqSynths = (...fns: (FreqSynthFn | undefined)[]): FreqSynthFn => {
+  return (freq: number) => {
+    return combine(
+      ...fns.map(v => v?.(freq)),
+    )
   }
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavBar from './NavBar.vue'
-import Synth from './Synth.vue'
+import NavBar from '../components/Main/NavBar.vue'
+import Main from './Main.vue'
 import HBtn from '~/components/HBtn.vue'
 import HSpacer from '~/components/HSpacer.vue'
 import { toggleDark } from '~/logic/dark'
@@ -16,5 +16,5 @@ import { toggleDark } from '~/logic/dark'
       <carbon-moon />
     </HBtn>
   </NavBar>
-  <Synth />
+  <Main />
 </template>

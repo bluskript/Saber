@@ -48,11 +48,11 @@ export class SynthRenderer extends CanvasRenderer {
     this.ctx.strokeStyle = '#60a5fa'
     this.ctx.lineWidth = 4
     this.ctx.beginPath()
-    this.drawArray([...arr], step)
+    this.drawArray(arr, step)
     this.ctx.stroke()
   }
 
-  drawArray(arr: Array<number>, step: number) {
+  drawArray(arr: Float32Array, step: number) {
     arr.forEach((v, i) => {
       if (i === arr.length - 1) return
       const currHeight = this.relativeToAxis(v)

@@ -1,0 +1,141 @@
+<script lang="ts" setup>
+import { reactive, ref } from '@vue/reactivity'
+import { computed, onMounted } from '@vue/runtime-core'
+import { onKeyDown, onKeyUp } from '@vueuse/core'
+import Oscillator from '../components/Main/Oscillator.vue'
+import FourierTransform from '../components/Main/FourierTransform.vue'
+import SynthDisplay from '../components/Main/SynthDisplay.vue'
+import { applyVolume, combine, combineFreqSynths } from '~/logic/synth'
+import type { SynthFn, FreqSynthFn } from '~/logic/synth'
+import { keys } from '~/logic/keysound'
+import HSlider from '~/components/HSlider.vue'
+import HBtn from '~/components/HBtn.vue'
+import { randStr } from '~/logic/randstr'
+
+const ctx = new AudioContext()
+let position = 0
+
+const volume = ref(0.5)
+const selectedOsc = ref('initial')
+
+const keysDown = reactive(new Set<string>())
+const synths = reactive<{
+  [id: string]: FreqSynthFn | undefined
+}>({
+  initial: undefined,
+})
+const idArr = reactive<string[]>([
+  'initial',
+])
+const freqSynthFn = computed(() => {
+  return combineFreqSynths(
+    ...Object.values(synths),
+  )
+})
+
+const deleteOsc = (i: number) => {
+  const id = idArr[i]
+  idArr.splice(i, 1)
+  delete synths[id]
+  if (i === 0) {
+    selectedOsc.value = idArr[i]
+    return
+  }
+  selectedOsc.value = idArr[i - 1]
+}
+
+const addOsc = () => {
+  const id = randStr()
+  synths[id] = undefined
+  idArr.push(id)
+  selectedOsc.value = idArr[idArr.length - 1]
+}
+
+const getSynthForKey = (key: string): SynthFn => {
+  const baseFrequency = 131
+  const increase = Math.pow(2, keys[key] / 12)
+
+  return freqSynthFn.value(baseFrequency * increase)
+}
+
+const synthFn = computed(() => {
+  return applyVolume(
+    combine(
+      ...[...keysDown].map(getSynthForKey),
+    ),
+    volume.value,
+  )
+})
+
+const setFreqSynthFn = (id: string) => {
+  return (fn: FreqSynthFn) => synths[id] = fn
+}
+
+onMounted(async() => {
+  const processor = ctx.createScriptProcessor(512, 0, 1)
+  processor.addEventListener('audioprocess', (ev) => {
+    const outputBuffer = ev.outputBuffer
+    const targetChannel = outputBuffer.getChannelData(0)
+    synthFn.value?.(targetChannel, position, ctx.sampleRate)
+    position += outputBuffer.length
+  })
+  processor.connect(ctx.destination)
+})
+
+onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
+  if (!freqSynthFn.value) return
+  keysDown.add(ev.key)
+})
+
+onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
+  keysDown.delete(ev.key)
+})
+</script>
+
+<template>
+  <div class="p-3">
+    <Card class="mb-2">
+      <h2 class="text-xl mb-3">
+        Synthesizer
+      </h2>
+      <div class="mb-3">
+        <div>
+          <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
+        </div>
+      </div>
+      <div class="flex">
+        <div class="bg-light-100 dark:bg-harmonydark-100 overflow-auto">
+          <HBtn variant="text" class="w-full" @click="addOsc">
+            <carbon-add />
+          </HBtn>
+          <HBtn
+            v-for="(id, i) in idArr"
+            :key="id"
+            :variant="selectedOsc === id ? 'active' : 'text'"
+            class="w-full"
+            @click="selectedOsc = id"
+          >
+            OSC{{ i+1 }}
+          </HBtn>
+        </div>
+        <div
+          v-for="(id, i) in idArr"
+          v-show="selectedOsc === id"
+          :key="id"
+          class="w-full bg-light-500 dark:bg-harmonydark-400 p-3 flex-1 block h-full"
+        >
+          <h1 class="text-2xl mb-2">
+            Oscillator {{ i + 1 }}
+          </h1>
+          <Oscillator
+            :set-synth-fn="setFreqSynthFn(id)"
+            :delete="() => deleteOsc(i)"
+            :delete-enabled="Object.keys(synths).length > 1"
+          />
+        </div>
+      </div>
+    </Card>
+    <SynthDisplay :fn="synthFn" class="mb-2" />
+    <FourierTransform :synth-fn="synthFn" />
+  </div>
+</template>

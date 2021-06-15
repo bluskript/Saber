@@ -20,7 +20,7 @@ export class CanvasRenderer {
 
   point(x: number, y: number, color: string) {
     this.ctx.fillStyle = color
-    this.ctx.fillRect(x, y, 1, 1)
+    this.ctx.fillRect(x, y, 3, 3)
   }
 
   line(x1: number, y1: number, x2: number, y2: number) {

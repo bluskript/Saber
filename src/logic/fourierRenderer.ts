@@ -78,5 +78,7 @@ export class FourierRenderer extends CanvasRenderer {
     super.renderLoop()
     if (this.fn.value)
       this.drawFFT(this.fn.value)
+    const center = this.centered(0, 0)
+    this.point(center.x, center.y, '#ffffff')
   }
 }

@@ -5,7 +5,6 @@ import { FourierRenderer } from '~/logic/fourierRenderer'
 import type { SynthFn } from '~/logic/synth'
 
 const props = defineProps<{
-  setSynthFn: (fn: SynthFn) => void
   synthFn?: SynthFn
 }>()
 

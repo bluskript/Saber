@@ -24,13 +24,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <canvas ref="canvas" class="w-full" />
-  <div class="flex mt-3 items-center">
-    <span class="mr-2">Draw Height</span>
-    <HSlider v-model="drawHeight" min="0" max="8" step="0.01" class="w-min" />
-  </div>
-  <div class="flex mt-3 items-center">
-    <span class="mr-2">Sample Size</span>
-    <HSlider v-model="sampleSize" min="6" max="12" step="1" class="w-min" />
-  </div>
+  <Card>
+    <canvas ref="canvas" class="w-full" />
+    <HSlider
+      v-model="drawHeight"
+      label="Draw Height"
+      min="0"
+      max="8"
+      step="0.01"
+    />
+    <HSlider
+      v-model="sampleSize"
+      label="Sample Size"
+      min="6"
+      max="12"
+      step="1"
+    />
+  </Card>
 </template>
