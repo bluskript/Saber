@@ -5,7 +5,7 @@ import { onKeyDown, onKeyUp } from '@vueuse/core'
 import Oscillator from '../components/Main/Oscillator.vue'
 import FourierTransform from '../components/Main/FourierTransform.vue'
 import SynthDisplay from '../components/Main/SynthDisplay.vue'
-import { applyVolume, combine, combineFreqSynths, sawTooth } from '~/logic/synth'
+import { applyVolume, combine, combineFreqSynths } from '~/logic/synth'
 import type { SynthFn, FreqSynthFn } from '~/logic/synth'
 import { keys } from '~/logic/keysound'
 import HSlider from '~/components/HSlider.vue'
@@ -18,14 +18,14 @@ if (!import.meta.env.SSR)
   ctx = new AudioContext()
 let position = 0
 
-const volume = ref(0.5)
+const volume = ref(0.2)
 const selectedOsc = ref('initial')
 
 const keysDown = reactive(new Set<string>())
 const synths = reactive<{
   [id: string]: FreqSynthFn | undefined
 }>({
-  initial: sawTooth,
+  initial: undefined,
 })
 const idArr = reactive<string[]>([
   'initial',
@@ -137,6 +137,9 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
           />
         </div>
       </div>
+      <p class="text-sm mt-2">
+        Use your computer keyboard to play notes (Middle row for white keys, top row for sharps / flats)
+      </p>
     </Card>
     <div class="grid lg:grid-cols-2 auto-rows-fr">
       <SynthDisplay :fn="synthFn" class="mb-2" />

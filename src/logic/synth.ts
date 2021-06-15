@@ -54,7 +54,7 @@ export const detuned = (synth: FreqSynthFn, voices = 1, detune = 0): FreqSynthFn
     ...[...new Array(voices)].map((_, i) => (freq: number) => {
       const range = (freq / 2) * detune
       const offset = (detune / voices) * i
-      return synth(freq + range * offset, Math.random())
+      return synth(freq + range * offset, voices > 1 ? Math.random() : 0)
     }),
   )
 }

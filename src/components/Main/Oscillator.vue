@@ -23,7 +23,7 @@ const synths: {
   square,
   triangle,
 }
-const selectedSynthName = ref<string | undefined>('saw')
+const selectedSynthName = ref<string | undefined>(undefined)
 const selectedSynth = computed(() => {
   return selectedSynthName.value ? synths[selectedSynthName.value] : undefined
 })
@@ -50,7 +50,7 @@ watch(freqSynthFn, () => {
 </script>
 
 <template>
-  <div class="flex gap-2 mb-3">
+  <div class="flex gap-2 mb-3 flex-wrap">
     <HBtn
       v-for="(_, name) in synths"
       :key="name"

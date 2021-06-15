@@ -39,7 +39,7 @@ const buttonClasses = computed(() => ({
   @apply
     px-4 py-2 rounded focus:outline-none transition duration-200
     ease-in-out flex justify-center
-    items-center cursor-pointer select-none;
+    items-center cursor-pointer select-none text-center;
   &.dense {
     @apply p-2 rounded-none;
   }
