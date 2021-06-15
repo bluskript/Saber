@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { ref } from '@vue/reactivity'
 import NavBar from '../components/Main/NavBar.vue'
 import Main from './Main.vue'
 import HBtn from '~/components/HBtn.vue'
 import HSpacer from '~/components/HSpacer.vue'
 import { toggleDark } from '~/logic/dark'
+
+const clicked = ref(false)
 </script>
 
 <template>
@@ -19,5 +22,10 @@ import { toggleDark } from '~/logic/dark'
       <mdi-github />
     </HBtn>
   </NavBar>
-  <Main />
+  <Main v-if="clicked" />
+  <div v-else class="flex items-center justify-center flex-1">
+    <HBtn variant="filled" color="primary" @click="clicked = true">
+      Audio won't play unless you press this button because of browser policies.
+    </HBtn>
+  </div>
 </template>
