@@ -72,7 +72,7 @@ const setFreqSynthFn = (id: string) => {
 }
 
 onMounted(async() => {
-  const processor = ctx.createScriptProcessor(512, 0, 1)
+  const processor = ctx.createScriptProcessor(1024, 0, 1)
   processor.addEventListener('audioprocess', (ev) => {
     const outputBuffer = ev.outputBuffer
     const targetChannel = outputBuffer.getChannelData(0)

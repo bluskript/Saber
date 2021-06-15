@@ -15,7 +15,7 @@ const model = useVModel(props, 'modelValue', emit)
 
 <template>
   <div class="flex items-center">
-    <span class="mr-3 text-gray-300">{{ props.label }}</span>
+    <span class="mr-3 text-gray-600 dark:text-gray-300">{{ props.label }}</span>
     <input
       v-model.number="model"
       type="range"
