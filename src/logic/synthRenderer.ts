@@ -30,7 +30,7 @@ export class SynthRenderer extends CanvasRenderer {
       return arr
     })
 
-    watch([this.fn, this.drawHeight, sampleSize], () => {
+    watch([this.arr, this.drawHeight, sampleSize], () => {
       this.rerender()
     })
   }
