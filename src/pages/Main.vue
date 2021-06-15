@@ -11,6 +11,7 @@ import { keys } from '~/logic/keysound'
 import HSlider from '~/components/HSlider.vue'
 import HBtn from '~/components/HBtn.vue'
 import { randStr } from '~/logic/randstr'
+import Keyboard from '~/components/Main/Keyboard.vue'
 
 let ctx: AudioContext
 
@@ -20,8 +21,9 @@ let position = 0
 
 const volume = ref(0.2)
 const selectedOsc = ref('initial')
+const pianoOpen = ref(false)
 
-const keysDown = reactive(new Set<string>())
+const semitonesDown = reactive(new Set<number>())
 const synths = reactive<{
   [id: string]: FreqSynthFn | undefined
 }>({
@@ -54,17 +56,17 @@ const addOsc = () => {
   selectedOsc.value = idArr[idArr.length - 1]
 }
 
-const getSynthForKey = (key: string): SynthFn => {
+const getSynthForSemitone = (semitone: number): SynthFn => {
   const baseFrequency = 131
-  const increase = Math.pow(2, keys[key] / 12)
+  const increase = Math.pow(2, semitone / 12)
 
-  return freqSynthFn.value(baseFrequency * increase)
+  return freqSynthFn.value(baseFrequency * increase, 0)
 }
 
 const synthFn = computed(() => {
   return applyVolume(
     combine(
-      ...[...keysDown].map(getSynthForKey),
+      ...[...semitonesDown].map(k => getSynthForSemitone(k)),
     ),
     volume.value,
   )
@@ -87,25 +89,35 @@ onMounted(async() => {
 
 onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
   if (!freqSynthFn.value) return
-  keysDown.add(ev.key)
+  semitonesDown.add(keys[ev.key])
 })
 
 onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
-  keysDown.delete(ev.key)
+  semitonesDown.delete(keys[ev.key])
 })
 </script>
 
 <template>
-  <div class="p-3">
+  <Keyboard v-show="pianoOpen" v-model="pianoOpen" :keys-down="semitonesDown" :key-down="(i) => semitonesDown.add(i)" :key-up="(i) => semitonesDown.delete(i)" />
+  <div
+    class="p-3"
+  >
     <Card class="mb-2">
       <h2 class="text-xl mb-3">
         Synthesizer
       </h2>
+      <h3 class="text-yellow-300 sm:hidden text-lg">
+        * Best experience on desktop or landscape mode
+      </h3>
       <div class="mb-3">
         <div>
           <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
         </div>
       </div>
+      <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = true">
+        <mdi-keyboard />
+        <span class="ml-1">Open Piano</span>
+      </HBtn>
       <div class="flex">
         <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2">
           <HBtn variant="text" class="w-full" @click="addOsc">
