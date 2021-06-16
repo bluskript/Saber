@@ -72,13 +72,13 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
     class="p-3"
   >
     <Card class="mb-2">
-      <h2 class="text-xl mb-3">
+      <h2 class="text-xl">
         Synthesizer
       </h2>
-      <h3 class="text-yellow-300 sm:hidden text-lg">
+      <h3 class="text-yellow-300 sm:hidden">
         * Best experience on desktop or landscape mode
       </h3>
-      <div class="mb-3">
+      <div class="my-3">
         <div>
           <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
         </div>

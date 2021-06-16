@@ -13,7 +13,17 @@ export default defineConfig({
       colors: {
         primary: colors.blue,
         secondary: colors.amber,
-        harmonydark: colors.dark,
+        harmonydark: {
+          100: '#272536',
+          200: '#242233',
+          300: '#212030',
+          400: '#1E1D2D',
+          500: '#1B1A2B',
+          600: '#181728',
+          700: '#151525',
+          800: '#121222',
+          900: '#0F0F1E',
+        },
         buttoncolor: 'var(--button-color)',
         textcolor: 'var(--text-color)',
       },

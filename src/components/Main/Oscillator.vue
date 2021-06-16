@@ -15,6 +15,8 @@ const semitones = ref(0)
 const detunePercent = ref(0)
 const detuneVoices = ref(1)
 
+const disabled = ref(false)
+
 const synths: {
   [name: string]: FreqSynthFn
 } = {
@@ -43,7 +45,11 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
   }
 })
 
-watch(freqSynthFn, () => {
+watch([freqSynthFn, disabled], () => {
+  if (disabled.value) {
+    props.setSynthFn(undefined)
+    return
+  }
   props.setSynthFn(freqSynthFn.value)
 })
 
@@ -51,50 +57,63 @@ onMounted(() => props.setSynthFn(freqSynthFn.value))
 </script>
 
 <template>
-  <div class="flex gap-2 mb-3 flex-wrap">
-    <HBtn
-      v-for="(_, name) in synths"
-      :key="name"
-      :variant="selectedSynthName === name ? 'active' : 'outlined'"
-      color="primary"
-      @click="selectedSynthName = name"
-    >
-      {{ name }}
-    </HBtn>
+  <div :class="{ disabled }">
+    <div class="flex gap-2 mb-3 flex-wrap">
+      <HBtn
+        v-for="(_, name) in synths"
+        :key="name"
+        :variant="selectedSynthName === name ? 'active' : 'outlined'"
+        color="primary"
+        @click="selectedSynthName = name"
+      >
+        {{ name }}
+      </HBtn>
+    </div>
+    <div class="sm:w-1/2">
+      <HSlider
+        v-model="volume"
+        label="Volume"
+        class="mb-2"
+        min="0"
+        max="1"
+        step="0.01"
+      />
+      <HSlider
+        v-model="semitones"
+        label="Semitones"
+        min="-24"
+        max="24"
+        step="1"
+        class="mb-2"
+      />
+      <HSlider
+        v-model="detunePercent"
+        label="Detune percent"
+        min="0"
+        max="1"
+        step="0.01"
+        class="mb-2"
+      />
+      <HSlider
+        v-model="detuneVoices"
+        label="Detune Voices"
+        min="1"
+        max="12"
+        step="1"
+        class="mb-2"
+      />
+    </div>
   </div>
-  <HSlider
-    v-model="volume"
-    label="Volume"
-    class="mb-2"
-    min="0"
-    max="1"
-    step="0.01"
-  />
-  <HSlider
-    v-model="semitones"
-    label="Semitones"
-    min="-24"
-    max="24"
-    step="1"
-    class="mb-2"
-  />
-  <HSlider
-    v-model="detunePercent"
-    label="Detune percent"
-    min="0"
-    max="1"
-    step="0.01"
-    class="mb-2"
-  />
-  <HSlider
-    v-model="detuneVoices"
-    label="Detune Voices"
-    min="1"
-    max="12"
-    step="1"
-    class="mb-2"
-  />
-  <HBtn class="mt-3" variant="outlined" color="secondary" :disabled="!deleteEnabled" @click="props.delete">
+  <HBtn class="mt-3" variant="outlined" color="secondary" @click="disabled = !disabled">
+    {{ disabled ? 'Enable Osc' : 'Disable Osc' }}
+  </HBtn>
+  <HBtn class="mt-3" variant="outlined" color="error" :disabled="!deleteEnabled" @click="props.delete">
     Delete Osc
   </HBtn>
 </template>
+
+<style lang="postcss" scoped>
+.disabled {
+  @apply pointer-events-none opacity-30;
+}
+</style>

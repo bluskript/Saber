@@ -2,7 +2,7 @@
 import { computed, defineProps } from 'vue'
 const props = defineProps<{
   variant: 'text' | 'filled' | 'outlined' | 'active'
-  color?: 'primary' | 'secondary'
+  color?: 'primary' | 'secondary' | 'error'
   icon?: boolean
   floating?: boolean
   flat?: boolean
@@ -32,6 +32,10 @@ const buttonClasses = computed(() => ({
 }
 
 .secondary {
+  --button-color: theme('colors.secondary.500');
+}
+
+.error {
   --button-color: theme('colors.red.500');
 }
 

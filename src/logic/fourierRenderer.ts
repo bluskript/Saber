@@ -25,7 +25,7 @@ export class FourierRenderer extends CanvasRenderer {
 
     watch(this.arr, () => this.rerender())
 
-    this.canvas.addEventListener('wheel', ev => this.onWheel(ev))
+    this.canvas.addEventListener('wheel', ev => this.onWheel(ev), { passive: false })
     this.canvas.addEventListener('mousedown', () => this.dragging = true)
     window.addEventListener('mouseup', () => this.dragging = false)
     this.canvas.addEventListener('mousemove', (ev) => {

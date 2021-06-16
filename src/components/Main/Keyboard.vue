@@ -31,7 +31,7 @@ const getSemitone = (i: number, j: number) => {
 
 <template>
   <div
-    class="absolute w-screen h-screen bg-gray-400 bg-opacity-20 overflow-hidden"
+    class="absolute w-screen h-screen bg-gray-400 bg-opacity-20 overflow-hidden z-1"
     @click="open = false"
   >
     <div class="relative w-full h-full">
@@ -43,10 +43,10 @@ const getSemitone = (i: number, j: number) => {
             :black="isBlack(j)"
             :offset="!isBlack(j)"
             :held-down="props.keysDown.has(getSemitone(i, j))"
-            @mousedown="props.keyDown(getSemitone(i, j))"
+            @mousedown.passive="props.keyDown(getSemitone(i, j))"
             @mouseup="props.keyUp(getSemitone(i, j))"
-            @touchstart="props.keyDown(getSemitone(i, j))"
-            @touchend="props.keyUp(getSemitone(i, j))"
+            @touchstart.passive="props.keyDown(getSemitone(i, j))"
+            @touchend.passive="props.keyUp(getSemitone(i, j))"
           />
         </template>
       </div>
