@@ -36,7 +36,7 @@ const getSemitone = (i: number, j: number) => {
   >
     <div class="relative w-full h-full">
       <div class="absolute bottom-0 left-0 flex" @click.stop="">
-        <template v-for="i in 4" :key="i">
+        <template v-for="i in 6" :key="i">
           <PianoKey
             v-for="j in 12"
             :key="j"
