@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template>
   <Card class="flex flex-col">
-    <canvas ref="canvas" class="w-full flex-1" />
+    <canvas ref="canvas" class="w-full flex-1 max-h-70" />
     <HSlider
       v-model="drawHeight"
       label="Draw Height"

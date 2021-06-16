@@ -9,6 +9,7 @@
   "dependencies": {
     "@vueuse/core": "^4.11.2",
     "@vueuse/head": "^0.5.1",
+    "debounce": "^1.2.1",
     "prism-theme-vars": "^0.2.2",
     "v-wave": "^1.2.8",
     "vue": "^3.0.11",
@@ -19,6 +20,7 @@
     "@antfu/eslint-config": "^0.6.5",
     "@iconify/json": "^1.1.351",
     "@intlify/vite-plugin-vue-i18n": "^2.1.2",
+    "@types/debounce": "^1.2.0",
     "@types/nprogress": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@vitejs/plugin-vue": "^1.2.3",

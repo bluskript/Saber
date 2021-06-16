@@ -29,6 +29,6 @@ onMounted(() => {
     <p class="mb-2">
       Use your mouse to pan and zoom
     </p>
-    <canvas ref="canvas" class="w-full flex-1" />
+    <canvas ref="canvas" class="w-full flex-1 max-h-70" />
   </Card>
 </template>

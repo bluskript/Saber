@@ -1,3 +1,5 @@
+import debounce from 'debounce'
+
 export class CanvasRenderer {
   ctx: CanvasRenderingContext2D
   canvas: HTMLCanvasElement
@@ -10,10 +12,11 @@ export class CanvasRenderer {
     this.canvas.width = this.canvas.clientWidth
     this.canvas.height = this.canvas.clientHeight
 
-    this.canvas.addEventListener('resize', () => {
+    window.addEventListener('resize', debounce(() => {
       this.canvas.width = this.canvas.clientWidth
       this.canvas.height = this.canvas.clientHeight
-    })
+      requestAnimationFrame(() => this.renderLoop())
+    }, 200), { passive: true })
 
     requestAnimationFrame(() => this.renderLoop())
   }
