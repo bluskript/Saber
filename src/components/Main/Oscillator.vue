@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, defineProps, ref, watch } from '@vue/runtime-core'
+import { computed, defineProps, onMounted, ref, watch } from '@vue/runtime-core'
 import { applyVolume, detuned, sawTooth, sine, square, triangle } from '~/logic/synth'
 import type { FreqSynthFn } from '~/logic/synth'
 import HBtn from '~/components/HBtn.vue'
@@ -23,11 +23,10 @@ const synths: {
   square,
   triangle,
 }
-const selectedSynthName = ref<string | undefined>(undefined)
+const selectedSynthName = ref<string | undefined>('saw')
 const selectedSynth = computed(() => {
   return selectedSynthName.value ? synths[selectedSynthName.value] : undefined
 })
-
 const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
   const freqSynthFn = selectedSynth.value
   if (!freqSynthFn) return
@@ -47,6 +46,8 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
 watch(freqSynthFn, () => {
   props.setSynthFn(freqSynthFn.value)
 })
+
+onMounted(() => props.setSynthFn(freqSynthFn.value))
 </script>
 
 <template>

@@ -17,14 +17,15 @@ const isBlack = (semitone: number) => {
   return [
     1,
     3,
-    5,
+    6,
     8,
     10,
+    12,
   ].includes(semitone - 1)
 }
 
 const getSemitone = (i: number, j: number) => {
-  return j + ((i - 1) * 12)
+  return (j - 1) + ((i - 1) * 12)
 }
 </script>
 
