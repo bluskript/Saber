@@ -61,11 +61,11 @@ export default defineConfig({
 
     // https://github.com/antfu/vite-plugin-pwa
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       manifest: {
-        name: 'Vitesse',
-        short_name: 'Vitesse',
-        theme_color: '#ffffff',
+        name: 'Saber',
+        short_name: 'Saber',
+        theme_color: '#eb3459',
         icons: [
           {
             src: '/pwa-192x192.png',
