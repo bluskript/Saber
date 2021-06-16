@@ -24,14 +24,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card class="flex flex-col">
-    <canvas ref="canvas" class="w-full flex-1 max-h-70" />
+  <Card class="flex h-full flex-col">
+    <canvas ref="canvas" class="w-full flex-1 max-h-50" />
     <HSlider
       v-model="drawHeight"
       label="Draw Height"
       min="0"
       max="8"
       step="0.01"
+      class="my-2"
     />
     <HSlider
       v-model="sampleSize"

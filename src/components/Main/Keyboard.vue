@@ -30,26 +30,19 @@ const getSemitone = (i: number, j: number) => {
 </script>
 
 <template>
-  <div
-    class="absolute w-screen h-screen bg-gray-400 bg-opacity-20 overflow-hidden z-1"
-    @click="open = false"
-  >
-    <div class="relative w-full h-full">
-      <div class="absolute bottom-0 left-0 flex" @click.stop="">
-        <template v-for="i in 6" :key="i">
-          <PianoKey
-            v-for="j in 12"
-            :key="j"
-            :black="isBlack(j)"
-            :offset="!isBlack(j)"
-            :held-down="props.keysDown.has(getSemitone(i, j))"
-            @mousedown.passive="props.keyDown(getSemitone(i, j))"
-            @mouseup="props.keyUp(getSemitone(i, j))"
-            @touchstart.passive="props.keyDown(getSemitone(i, j))"
-            @touchend.passive="props.keyUp(getSemitone(i, j))"
-          />
-        </template>
-      </div>
-    </div>
+  <div class="fixed bottom-0 left-0 flex overflow-none z-1" @click.stop="">
+    <template v-for="i in 6" :key="i">
+      <PianoKey
+        v-for="j in 12"
+        :key="j"
+        :black="isBlack(j)"
+        :offset="!isBlack(j)"
+        :held-down="props.keysDown.has(getSemitone(i, j))"
+        @mousedown.passive="props.keyDown(getSemitone(i, j))"
+        @mouseup="props.keyUp(getSemitone(i, j))"
+        @touchstart.passive="props.keyDown(getSemitone(i, j))"
+        @touchend.passive="props.keyUp(getSemitone(i, j))"
+      />
+    </template>
   </div>
 </template>

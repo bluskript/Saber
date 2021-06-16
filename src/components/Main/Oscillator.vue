@@ -82,7 +82,7 @@ onMounted(() => props.setSynthFn(freqSynthFn.value))
       label="Semitones"
       min="-24"
       max="24"
-      step="0.01"
+      step="1"
       class="mb-2"
     />
     <HSlider

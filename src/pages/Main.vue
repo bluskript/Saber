@@ -3,7 +3,7 @@ import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
 import Oscillator from '../components/Main/Oscillator.vue'
-import FourierTransform from '../components/Main/FourierTransform.vue'
+import FourierVisualizer from '../components/Main/FourierVisualizer.vue'
 import SynthDisplay from '../components/Main/SynthDisplay.vue'
 import { applyVolume, combine } from '~/logic/synths'
 import type { SynthFn } from '~/logic/synths'
@@ -13,6 +13,8 @@ import HBtn from '~/components/HBtn.vue'
 import Keyboard from '~/components/Main/Keyboard.vue'
 import { OscManager } from '~/logic/oscManager'
 import { setSampleRate } from '~/logic/sampleRate'
+import { useFourier } from '~/logic/useFourier'
+import FrequencyView from '~/components/Main/FrequencyView.vue'
 
 let ctx: AudioContext
 
@@ -25,6 +27,9 @@ let position = 0
 
 const volume = ref(0.2)
 const pianoOpen = ref(false)
+const sampleSize = ref(11)
+const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
+
 const oscManager = new OscManager()
 
 const getSynthForSemitone = (semitone: number): SynthFn => {
@@ -42,6 +47,8 @@ const synthFn = computed(() => {
     volume.value,
   )
 })
+
+const fourierArr = useFourier(synthFn, actualSampleSize)
 
 onMounted(async() => {
   const processor = ctx.createScriptProcessor(1024, 0, 1)
@@ -74,8 +81,11 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
   <div
     class="p-3"
   >
-    <SynthDisplay :fn="synthFn" class="mb-2" />
-    <div class="grid md:grid-cols-2 auto-rows-fr">
+    <div class="grid grid-cols-2 gap-2 mb-2">
+      <SynthDisplay :fn="synthFn" class="mb-2" />
+      <FrequencyView :fourier-arr="fourierArr" />
+    </div>
+    <div class="grid md:grid-cols-2 auto-rows-fr gap-2">
       <Card>
         <h2 class="text-xl">
           Synthesizer
@@ -88,9 +98,9 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
             <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
           </div>
         </div>
-        <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = true">
+        <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = !pianoOpen">
           <mdi-keyboard />
-          <span class="ml-1">Open Piano</span>
+          <span class="ml-1">Toggle Piano</span>
         </HBtn>
         <div class="flex">
           <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2 w-24">
@@ -131,7 +141,7 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
           Use your computer keyboard to play notes (Middle row for white keys, top row for sharps / flats)
         </p>
       </Card>
-      <FourierTransform :synth-fn="synthFn" />
+      <FourierVisualizer :synth-fn="synthFn" :fourier-arr="fourierArr" />
     </div>
   </div>
 </template>

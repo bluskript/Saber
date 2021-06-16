@@ -8,7 +8,7 @@ declare module 'vue' {
     HBtnGroup: typeof import('./src/components/HBtnGroup.vue')['default']
     HSlider: typeof import('./src/components/HSlider.vue')['default']
     HSpacer: typeof import('./src/components/HSpacer.vue')['default']
-    FourierTransform: typeof import('./src/components/Main/FourierTransform.vue')['default']
+    FourierPreview: typeof import('./src/components/Main/FourierVisualizer.vue')['default']
     Keyboard: typeof import('./src/components/Main/Keyboard.vue')['default']
     NavBar: typeof import('./src/components/Main/NavBar.vue')['default']
     Oscillator: typeof import('./src/components/Main/Oscillator.vue')['default']
