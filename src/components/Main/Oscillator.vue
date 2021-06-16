@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, defineProps, onMounted, ref, watch } from '@vue/runtime-core'
-import { applyVolume, detuned, sawTooth, sine, square, triangle } from '~/logic/synth'
-import type { FreqSynthFn } from '~/logic/synth'
+import { applyVolume, detuned, sawTooth, sine, square, triangle } from '~/logic/synths'
+import type { FreqSynthFn } from '~/logic/synths'
 import HBtn from '~/components/HBtn.vue'
 
 const props = defineProps<{

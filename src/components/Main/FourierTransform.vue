@@ -2,7 +2,7 @@
 import { computed, defineProps, onMounted, ref } from 'vue'
 import Card from '~/components/Card.vue'
 import { FourierRenderer } from '~/logic/fourierRenderer'
-import type { SynthFn } from '~/logic/synth'
+import type { SynthFn } from '~/logic/synths'
 
 const props = defineProps<{
   synthFn?: SynthFn

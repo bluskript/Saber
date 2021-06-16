@@ -2,7 +2,7 @@ import { Ref } from '@vue/reactivity'
 import { computed, watch } from '@vue/runtime-core'
 import { fft, inverseFFT } from './fft'
 import { CanvasRenderer } from './renderer'
-import { SynthFn } from './synth'
+import { SynthFn } from './synths'
 
 export class SynthRenderer extends CanvasRenderer {
   sampleRate: number

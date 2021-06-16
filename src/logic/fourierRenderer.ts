@@ -1,7 +1,7 @@
 import { computed, Ref, watch } from 'vue'
 import { Complex, fft } from './fft'
 import { CanvasRenderer } from './renderer'
-import { SynthFn } from './synth'
+import { SynthFn } from './synths'
 
 export class FourierRenderer extends CanvasRenderer {
   fn: Ref<SynthFn | undefined>

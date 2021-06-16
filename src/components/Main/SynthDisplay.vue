@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity'
 import { computed, defineProps, onMounted } from '@vue/runtime-core'
-import type { SynthFn } from '~/logic/synth'
+import type { SynthFn } from '~/logic/synths'
 import { SynthRenderer } from '~/logic/synthRenderer'
 
 const props = defineProps<{

@@ -1,80 +1,44 @@
 <script lang="ts" setup>
-import { reactive, ref } from '@vue/reactivity'
+import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
 import Oscillator from '../components/Main/Oscillator.vue'
 import FourierTransform from '../components/Main/FourierTransform.vue'
 import SynthDisplay from '../components/Main/SynthDisplay.vue'
-import { applyVolume, combine, combineFreqSynths } from '~/logic/synth'
-import type { SynthFn, FreqSynthFn } from '~/logic/synth'
+import { applyVolume, combine } from '~/logic/synths'
+import type { SynthFn } from '~/logic/synths'
 import { keys } from '~/logic/keysound'
 import HSlider from '~/components/HSlider.vue'
 import HBtn from '~/components/HBtn.vue'
-import { randStr } from '~/logic/randstr'
 import Keyboard from '~/components/Main/Keyboard.vue'
+import { OscManager } from '~/logic/oscManager'
 
 let ctx: AudioContext
 
 if (!import.meta.env.SSR)
   ctx = new AudioContext()
+
 let position = 0
 
 const volume = ref(0.2)
-const selectedOsc = ref('initial')
 const pianoOpen = ref(false)
-
-const semitonesDown = reactive(new Set<number>())
-const synths = reactive<{
-  [id: string]: FreqSynthFn | undefined
-}>({
-  initial: undefined,
-})
-const idArr = reactive<string[]>([
-  'initial',
-])
-const freqSynthFn = computed(() => {
-  return combineFreqSynths(
-    ...Object.values(synths),
-  )
-})
-
-const deleteOsc = (i: number) => {
-  const id = idArr[i]
-  idArr.splice(i, 1)
-  delete synths[id]
-  if (i === 0) {
-    selectedOsc.value = idArr[i]
-    return
-  }
-  selectedOsc.value = idArr[i - 1]
-}
-
-const addOsc = () => {
-  const id = randStr()
-  synths[id] = undefined
-  idArr.push(id)
-  selectedOsc.value = idArr[idArr.length - 1]
-}
+const oscManager = new OscManager()
 
 const getSynthForSemitone = (semitone: number): SynthFn => {
   const baseFrequency = 131
   const increase = Math.pow(2, semitone / 12)
 
-  return freqSynthFn.value(baseFrequency * increase, 0)
+  return oscManager.freqSynthFn.value(baseFrequency * increase, 0)
 }
 
 const synthFn = computed(() => {
   return applyVolume(
     combine(
-      ...[...semitonesDown].map(k => getSynthForSemitone(k)),
+      ...[...oscManager.semitonesDown].map(k => getSynthForSemitone(k)),
     ),
     volume.value,
   )
 })
-
-const setFreqSynthFn = (id: string) => {
-  return (fn: FreqSynthFn) => synths[id] = fn
-}
 
 onMounted(async() => {
   const processor = ctx.createScriptProcessor(1024, 0, 1)
@@ -88,17 +52,22 @@ onMounted(async() => {
 })
 
 onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
-  if (!freqSynthFn.value) return
-  semitonesDown.add(keys[ev.key])
+  oscManager.semitoneDown(keys[ev.key])
 })
 
 onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
-  semitonesDown.delete(keys[ev.key])
+  oscManager.semitoneUp(keys[ev.key])
 })
 </script>
 
 <template>
-  <Keyboard v-show="pianoOpen" v-model="pianoOpen" :keys-down="semitonesDown" :key-down="(i) => semitonesDown.add(i)" :key-up="(i) => semitonesDown.delete(i)" />
+  <Keyboard
+    v-show="pianoOpen"
+    v-model="pianoOpen"
+    :keys-down="oscManager.semitonesDown"
+    :key-down="(i) => oscManager.semitoneDown(i)"
+    :key-up="(i) => oscManager.semitoneUp(i)"
+  />
   <div
     class="p-3"
   >
@@ -120,22 +89,26 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
       </HBtn>
       <div class="flex">
         <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2">
-          <HBtn variant="text" class="w-full" @click="addOsc">
+          <HBtn
+            variant="text"
+            class="w-full"
+            @click="() => oscManager.addOsc()"
+          >
             <carbon-add />
           </HBtn>
           <HBtn
-            v-for="(id, i) in idArr"
+            v-for="(id, i) in oscManager.synthArr"
             :key="id"
-            :variant="selectedOsc === id ? 'active' : 'text'"
+            :variant="oscManager.selectedOsc.value === id ? 'active' : 'text'"
             class="w-full"
-            @click="selectedOsc = id"
+            @click="oscManager.selectedOsc.value = id"
           >
             OSC{{ i+1 }}
           </HBtn>
         </div>
         <div
-          v-for="(id, i) in idArr"
-          v-show="selectedOsc === id"
+          v-for="(id, i) in oscManager.synthArr"
+          v-show="oscManager.selectedOsc.value === id"
           :key="id"
           class="w-full bg-light-500 dark:bg-harmonydark-400 p-3 flex-1 block h-full"
         >
@@ -143,9 +116,9 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
             Oscillator {{ i + 1 }}
           </h1>
           <Oscillator
-            :set-synth-fn="setFreqSynthFn(id)"
-            :delete="() => deleteOsc(i)"
-            :delete-enabled="Object.keys(synths).length > 1"
+            :set-synth-fn="oscManager.setFreqSynthFn(id)"
+            :delete="() => oscManager.deleteOsc(i)"
+            :delete-enabled="Object.keys(oscManager.synths).length > 1"
           />
         </div>
       </div>
