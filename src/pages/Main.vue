@@ -12,11 +12,14 @@ import HSlider from '~/components/HSlider.vue'
 import HBtn from '~/components/HBtn.vue'
 import Keyboard from '~/components/Main/Keyboard.vue'
 import { OscManager } from '~/logic/oscManager'
+import { setSampleRate } from '~/logic/sampleRate'
 
 let ctx: AudioContext
 
-if (!import.meta.env.SSR)
+if (!import.meta.env.SSR) {
   ctx = new AudioContext()
+  setSampleRate(ctx.sampleRate)
+}
 
 let position = 0
 
@@ -71,63 +74,63 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
   <div
     class="p-3"
   >
-    <Card class="mb-2">
-      <h2 class="text-xl">
-        Synthesizer
-      </h2>
-      <h3 class="text-yellow-300 sm:hidden">
-        * Best experience on desktop or landscape mode
-      </h3>
-      <div class="my-3">
-        <div>
-          <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
+    <SynthDisplay :fn="synthFn" class="mb-2" />
+    <div class="grid md:grid-cols-2 auto-rows-fr">
+      <Card>
+        <h2 class="text-xl">
+          Synthesizer
+        </h2>
+        <h3 class="text-yellow-300 sm:hidden">
+          * Best experience on desktop or landscape mode
+        </h3>
+        <div class="my-3">
+          <div>
+            <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
+          </div>
         </div>
-      </div>
-      <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = true">
-        <mdi-keyboard />
-        <span class="ml-1">Open Piano</span>
-      </HBtn>
-      <div class="flex">
-        <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2">
-          <HBtn
-            variant="text"
-            class="w-full"
-            @click="() => oscManager.addOsc()"
-          >
-            <carbon-add />
-          </HBtn>
-          <HBtn
+        <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = true">
+          <mdi-keyboard />
+          <span class="ml-1">Open Piano</span>
+        </HBtn>
+        <div class="flex">
+          <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2 w-24">
+            <HBtn
+              variant="text"
+              class="w-full"
+              @click="() => oscManager.addOsc()"
+            >
+              <carbon-add />
+            </HBtn>
+            <HBtn
+              v-for="(id, i) in oscManager.synthArr"
+              :key="id"
+              :variant="oscManager.selectedOsc.value === id ? 'active' : 'text'"
+              class="w-full"
+              @click="oscManager.selectedOsc.value = id"
+            >
+              OSC{{ i+1 }}
+            </HBtn>
+          </div>
+          <div
             v-for="(id, i) in oscManager.synthArr"
+            v-show="oscManager.selectedOsc.value === id"
             :key="id"
-            :variant="oscManager.selectedOsc.value === id ? 'active' : 'text'"
-            class="w-full"
-            @click="oscManager.selectedOsc.value = id"
+            class="w-full bg-light-500 dark:bg-harmonydark-400 p-3 flex-1 block h-full"
           >
-            OSC{{ i+1 }}
-          </HBtn>
+            <h1 class="text-2xl mb-2">
+              Oscillator {{ i + 1 }}
+            </h1>
+            <Oscillator
+              :set-synth-fn="oscManager.setFreqSynthFn(id)"
+              :delete="() => oscManager.deleteOsc(i)"
+              :delete-enabled="Object.keys(oscManager.synths).length > 1"
+            />
+          </div>
         </div>
-        <div
-          v-for="(id, i) in oscManager.synthArr"
-          v-show="oscManager.selectedOsc.value === id"
-          :key="id"
-          class="w-full bg-light-500 dark:bg-harmonydark-400 p-3 flex-1 block h-full"
-        >
-          <h1 class="text-2xl mb-2">
-            Oscillator {{ i + 1 }}
-          </h1>
-          <Oscillator
-            :set-synth-fn="oscManager.setFreqSynthFn(id)"
-            :delete="() => oscManager.deleteOsc(i)"
-            :delete-enabled="Object.keys(oscManager.synths).length > 1"
-          />
-        </div>
-      </div>
-      <p class="text-sm mt-2">
-        Use your computer keyboard to play notes (Middle row for white keys, top row for sharps / flats)
-      </p>
-    </Card>
-    <div class="grid lg:grid-cols-2 auto-rows-fr">
-      <SynthDisplay :fn="synthFn" class="mb-2" />
+        <p class="text-sm mt-2">
+          Use your computer keyboard to play notes (Middle row for white keys, top row for sharps / flats)
+        </p>
+      </Card>
       <FourierTransform :synth-fn="synthFn" />
     </div>
   </div>

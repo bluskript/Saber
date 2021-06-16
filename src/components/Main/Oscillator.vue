@@ -69,40 +69,38 @@ onMounted(() => props.setSynthFn(freqSynthFn.value))
         {{ name }}
       </HBtn>
     </div>
-    <div class="sm:w-1/2">
-      <HSlider
-        v-model="volume"
-        label="Volume"
-        class="mb-2"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-      <HSlider
-        v-model="semitones"
-        label="Semitones"
-        min="-24"
-        max="24"
-        step="1"
-        class="mb-2"
-      />
-      <HSlider
-        v-model="detunePercent"
-        label="Detune percent"
-        min="0"
-        max="1"
-        step="0.01"
-        class="mb-2"
-      />
-      <HSlider
-        v-model="detuneVoices"
-        label="Detune Voices"
-        min="1"
-        max="12"
-        step="1"
-        class="mb-2"
-      />
-    </div>
+    <HSlider
+      v-model="volume"
+      label="Volume"
+      class="mb-2"
+      min="0"
+      max="1"
+      step="0.01"
+    />
+    <HSlider
+      v-model="semitones"
+      label="Semitones"
+      min="-24"
+      max="24"
+      step="0.01"
+      class="mb-2"
+    />
+    <HSlider
+      v-model="detunePercent"
+      label="Detune percent"
+      min="0"
+      max="1"
+      step="0.01"
+      class="mb-2"
+    />
+    <HSlider
+      v-model="detuneVoices"
+      label="Detune Voices"
+      min="1"
+      max="12"
+      step="1"
+      class="mb-2"
+    />
   </div>
   <HBtn class="mt-3" variant="outlined" color="secondary" @click="disabled = !disabled">
     {{ disabled ? 'Enable Osc' : 'Disable Osc' }}

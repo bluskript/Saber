@@ -1,23 +1,32 @@
 <script lang="ts" setup>
 import { computed, defineProps, onMounted, ref } from 'vue'
 import Card from '~/components/Card.vue'
-import { FourierRenderer } from '~/logic/fourierRenderer'
+import { FourierRenderer as FourierVisualizer } from '~/logic/fourierVisualizer'
+import { FrequencyViewer } from '~/logic/frequencyViewer'
 import type { SynthFn } from '~/logic/synths'
+import { useFourier } from '~/logic/useFourier'
 
 const props = defineProps<{
   synthFn?: SynthFn
 }>()
 
-const canvas = ref<HTMLCanvasElement | null>(null)
+const visualizerCanvas = ref<HTMLCanvasElement | null>(null)
+const viewerCanvas = ref<HTMLCanvasElement | null>(null)
 const drawScale = ref(1)
+const sampleSize = ref(11)
+const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
 
 const fn = computed(() => props.synthFn)
 
+const fourierArr = useFourier(fn, actualSampleSize)
+
 onMounted(() => {
-  if (!canvas.value) return
-  const ctx = canvas.value.getContext('2d')
+  if (!visualizerCanvas.value || !viewerCanvas.value) return
+  const ctx = visualizerCanvas.value.getContext('2d')
+  const viewerCtx = viewerCanvas.value.getContext('2d')
   if (ctx === null) return
-  const renderer = new FourierRenderer(ctx, fn, drawScale)
+  const visualizer = new FourierVisualizer(ctx, drawScale, fourierArr)
+  const viewer = new FrequencyViewer(viewerCtx, fourierArr)
 })
 </script>
 
@@ -29,6 +38,8 @@ onMounted(() => {
     <p class="mb-2">
       Use your mouse to pan and zoom
     </p>
-    <canvas ref="canvas" class="w-full flex-1 max-h-70" />
+    <HSlider v-model="sampleSize" max="20" min="6" step="1" />
+    <canvas ref="visualizerCanvas" class="w-full flex-1" />
+    <canvas ref="viewerCanvas" class="w-full flex-1" />
   </Card>
 </template>

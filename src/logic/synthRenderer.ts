@@ -1,7 +1,7 @@
 import { Ref } from '@vue/reactivity'
 import { computed, watch } from '@vue/runtime-core'
-import { fft, inverseFFT } from './fft'
 import { CanvasRenderer } from './renderer'
+import { sampleRate } from './sampleRate'
 import { SynthFn } from './synths'
 
 export class SynthRenderer extends CanvasRenderer {
@@ -22,7 +22,7 @@ export class SynthRenderer extends CanvasRenderer {
     this.drawHeight = drawHeight
     this.sampleSize = sampleSize
     this.canvas = ctx.canvas
-    this.sampleRate = 44100
+    this.sampleRate = sampleRate
 
     this.arr = computed(() => {
       const arr = Float32Array.of(...Array(this.sampleSize.value).fill(0))

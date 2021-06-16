@@ -1,29 +1,24 @@
-import { computed, Ref, watch } from 'vue'
-import { Complex, fft } from './fft'
+import { Ref, watch } from 'vue'
+import { Complex } from './fft'
 import { CanvasRenderer } from './renderer'
-import { SynthFn } from './synths'
 
 export class FourierRenderer extends CanvasRenderer {
-  fn: Ref<SynthFn | undefined>
   drawScale: Ref<number>
-  arr: Ref<Complex[]>
+  fourierArr: Ref<Complex[]>
   offsetX = 0
   offsetY = 0
   dragging = false
 
-  constructor(ctx: CanvasRenderingContext2D, fn: Ref<SynthFn | undefined>, drawScale: Ref<number>) {
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    drawScale: Ref<number>,
+    fourierArr: Ref<Complex[]>,
+  ) {
     super(ctx)
-    this.fn = fn
     this.drawScale = drawScale
+    this.fourierArr = fourierArr
 
-    this.arr = computed(() => {
-      const arr = Float32Array.of(...Array(512).fill(0))
-      this.fn.value?.(arr, 0, 44100)
-      const renderArr = fft([...arr])
-      return renderArr
-    })
-
-    watch(this.arr, () => this.rerender())
+    watch(this.fourierArr, () => this.rerender())
 
     this.canvas.addEventListener('wheel', ev => this.onWheel(ev), { passive: false })
     this.canvas.addEventListener('mousedown', () => this.dragging = true)
@@ -68,10 +63,10 @@ export class FourierRenderer extends CanvasRenderer {
   drawFFT() {
     this.ctx.strokeStyle = '#4ADE80'
     this.ctx.beginPath()
-    this.arr.value.forEach((v, i) => {
-      if (i === this.arr.value.length - 1) return
-      const currPt = this.arr.value[i]
-      const nextPt = this.arr.value[i + 1]
+    this.fourierArr.value.forEach((v, i) => {
+      if (i === this.fourierArr.value.length - 1) return
+      const currPt = this.fourierArr.value[i]
+      const nextPt = this.fourierArr.value[i + 1]
       const { x, y } = this.centered(currPt.r, currPt.i)
       const { x: nextX, y: nextY } = this.centered(nextPt.r, nextPt.i)
       this.line(
@@ -86,8 +81,7 @@ export class FourierRenderer extends CanvasRenderer {
 
   renderLoop() {
     super.renderLoop()
-    if (this.fn.value)
-      this.drawFFT()
+    this.drawFFT()
     const center = this.centered(0, 0)
     this.point(center.x, center.y, '#ffffff')
   }

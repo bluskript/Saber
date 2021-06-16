@@ -24,7 +24,7 @@ const model = useVModel(props, 'modelValue', emit)
       :max="props.max"
       :step="props.step"
     />
-    <span class="ml-2">{{ model }}</span>
+    <span class="ml-2 min-w-12">{{ model }}</span>
   </div>
 </template>
 
