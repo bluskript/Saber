@@ -66,6 +66,7 @@ onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 })
 
 onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
+  if (ev.shiftKey) return
   oscManager.semitoneUp(keys[ev.key])
 })
 </script>
