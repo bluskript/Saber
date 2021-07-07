@@ -6,14 +6,14 @@ import { useVModel } from '@vueuse/core'
 
 const props = defineProps<{
   modelValue: string
-  options: {value: string; icon: Component}[]
+  waveforms: {value: string; icon: Component}[]
 }>()
 const emit = defineEmit(['update:modelValue'])
 const model = useVModel(props, 'modelValue', emit)
 </script>
 
 <template>
-  <SquareBtn v-for="opt of options" :key="opt.value" :active="opt.value === model" @click="model = opt.value">
-    <component :is="opt.icon"></component>
+  <SquareBtn v-for="waveform of waveforms" :key="waveform.value" :active="waveform.value === model" @click="model = waveform.value">
+    <component :is="waveform.icon"></component>
   </SquareBtn>
 </template>
