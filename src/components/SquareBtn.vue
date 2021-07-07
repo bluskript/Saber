@@ -17,11 +17,11 @@ defineProps<{
   @apply transition duration-200 cursor-pointer border-2 flex items-center rounded w-min p-2;
 
   &:not(.active) {
-    @apply text-secondary-300 border-transparent;
+    @apply text-secondary-300 border-transparent bg-harmonydark-800;
   }
-}
 
-.active {
-  @apply bg-primary-100 border-primary-400 text-primary-400;
+  &.active {
+    @apply bg-primary-100 border-primary-400 text-primary-400;
+  }
 }
 </style>
