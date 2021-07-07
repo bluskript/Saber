@@ -2,7 +2,7 @@
 import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
-import Oscillator from '../components/Main/Oscillator.vue'
+import Oscillator from '../components/Main/Oscillators/Oscillator.vue'
 import FourierVisualizer from '../components/Main/FlexZone/FourierVisualizer.vue'
 import SynthDisplay from '../components/Main/FlexZone/Waveform.vue'
 import { applyVolume, combine } from '~/logic/synths'

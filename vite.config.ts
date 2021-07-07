@@ -9,6 +9,7 @@ import WindiCSS from 'vite-plugin-windicss'
 import { VitePWA } from 'vite-plugin-pwa'
 import VueI18n from '@intlify/vite-plugin-vue-i18n'
 import ViteFonts from 'vite-plugin-fonts'
+import svgLoader from 'vite-svg-loader'
 
 export default defineConfig({
   resolve: {
@@ -21,6 +22,10 @@ export default defineConfig({
       google: {
         families: ['Space Mono'],
       },
+    }),
+
+    svgLoader({
+      svgo: false,
     }),
 
     Vue({

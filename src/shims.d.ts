@@ -1,3 +1,4 @@
+
 /* eslint-disable import/no-duplicates */
 
 interface AudioWorkletProcessor {
