@@ -27,6 +27,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  default: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const emit = defineEmit(['update:modelValue'])
@@ -45,7 +49,7 @@ const displayValue = computed(() => {
 // Sets model to 0 if alt is held. Otherwise sets dragging to true.
 const onMouseDown = (e: MouseEvent) => {
   if (e.altKey) {
-    model.value = 0
+    model.value = props.default
   }
   else {
     dragging.value = true
@@ -90,11 +94,11 @@ watch(dragging, () => {
 </script>
 
 <template>
-  <div class="modifier" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
+  <div class="modifier text-sm" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
     <div class="bg-harmonydark-900 py-0.5 px-1">
       {{ props.label }}
     </div>
-    <div class="bg-harmonydark-800 py-0.5 px-1 min-w-16 text-right text-primary-400">
+    <div class="bg-harmonydark-800 py-0.5 px-1 min-w-12 text-right text-primary-400">
       {{ Math.sign(model) >= 0 ? '+' : null }}{{ displayValue }}
     </div>
   </div>
