@@ -21,7 +21,7 @@ const keyProps = computed(() => ({
 
 <style lang="postcss" scoped>
 .key {
-  @apply h-48 w-16 outline-none border-gray-500 cursor-pointer;
+  @apply h-full w-16 outline-none border-gray-500 cursor-pointer flex-shrink-0;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
@@ -35,7 +35,7 @@ const keyProps = computed(() => ({
 }
 
 .black {
-  @apply bg-black w-8 h-32 -ml-8 z-2;
+  @apply bg-black w-8 h-24 -ml-8 z-2;
 
   &.heldDown {
     @apply bg-dark-100;

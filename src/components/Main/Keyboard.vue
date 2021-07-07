@@ -1,17 +1,12 @@
 <script lang="ts" setup>
-import { defineEmit, defineProps } from '@vue/runtime-core'
-import { useVModel } from '@vueuse/core'
+import { defineProps } from '@vue/runtime-core'
 import PianoKey from './PianoKey.vue'
 
 const props = defineProps<{
-  modelValue: boolean
   keysDown: Set<number>
   keyDown: (key: number) => void
   keyUp: (key: number) => void
 }>()
-const emit = defineEmit(['update:modelValue'])
-
-const open = useVModel(props, 'modelValue', emit)
 
 const isBlack = (semitone: number) => {
   return [
@@ -30,8 +25,8 @@ const getSemitone = (i: number, j: number) => {
 </script>
 
 <template>
-  <div class="fixed bottom-0 left-0 flex overflow-none z-1" @click.stop="">
-    <template v-for="i in 6" :key="i">
+  <div class="flex h-48 overflow-x-hidden" @click.stop="">
+    <template v-for="i in 10" :key="i">
       <PianoKey
         v-for="j in 12"
         :key="j"

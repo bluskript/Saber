@@ -11,18 +11,27 @@ export default defineConfig({
   theme: {
     extend: {
       colors: {
-        primary: colors.blue,
-        secondary: colors.amber,
+        primary: {
+          100: '#0B2063',
+          200: '#254EB6',
+          300: '#437BEA',
+          400: '#6B9EEF',
+        },
+        secondary: {
+          100: '#140D44',
+          200: '#352790',
+          300: '#4D3BC4',
+          400: '#6858D0',
+        },
         harmonydark: {
-          100: '#272536',
-          200: '#242233',
-          300: '#212030',
-          400: '#1E1D2D',
-          500: '#1B1A2B',
-          600: '#181728',
-          700: '#151525',
-          800: '#121222',
-          900: '#0F0F1E',
+          300: '#2D2D49',
+          400: '#232339',
+          500: '#1E1E2F',
+          600: '#1A1A28',
+          700: '#161622',
+          800: '#12121C',
+          850: '#0E0E16',
+          900: '#08080D',
         },
         buttoncolor: 'var(--button-color)',
         textcolor: 'var(--text-color)',

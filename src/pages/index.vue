@@ -10,6 +10,12 @@ const clicked = ref(false)
 </script>
 
 <template>
+  <Main v-if="clicked" />
+  <div v-else class="flex items-center justify-center flex-1 p-6">
+    <HBtn variant="filled" color="primary" @click="clicked = true">
+      Audio won't play unless you press this button because of browser policies.
+    </HBtn>
+  </div>
   <NavBar>
     <h1 class="font-light text-xl">
       Saber
@@ -22,10 +28,4 @@ const clicked = ref(false)
       <mdi-github />
     </HBtn>
   </NavBar>
-  <Main v-if="clicked" />
-  <div v-else class="flex items-center justify-center flex-1 p-6">
-    <HBtn variant="filled" color="primary" @click="clicked = true">
-      Audio won't play unless you press this button because of browser policies.
-    </HBtn>
-  </div>
 </template>
