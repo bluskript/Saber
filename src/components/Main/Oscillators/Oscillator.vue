@@ -10,12 +10,6 @@ const props = defineProps<{
   deleteEnabled: boolean
 }>()
 
-const volume = ref(0.5)
-const semitones = ref(0)
-const detunePercent = ref(0)
-const detuneVoices = ref(1)
-const disabled = ref(false)
-
 const synths: {
   [name: string]: FreqSynthFn
 } = {
@@ -32,7 +26,7 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
   const freqSynthFn = selectedSynth.value
   if (!freqSynthFn) return
   return (freq) => {
-    freq *= Math.pow(2, semitones.value / 12)
+    freq *= Math.pow(2, ((semitones.value / 12) + octave.value + tune.value / (12 * 100)))
     return applyVolume(
       detuned(
         freqSynthFn,
@@ -42,14 +36,6 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
       volume.value,
     )
   }
-})
-
-watch([freqSynthFn, disabled], () => {
-  if (disabled.value) {
-    props.setSynthFn(undefined)
-    return
-  }
-  props.setSynthFn(freqSynthFn.value)
 })
 
 // Import all the SVG icons as components
@@ -80,28 +66,36 @@ interface IModifier {
   percent?: boolean
 }
 
+// Initialize default values as reactive elements
+const volume = ref(0.5);
+const semitones = ref(0);
+const detunePercent = ref(0);
+const octave = ref(0);
+const tune = ref(0);
+const detuneVoices = ref(1);
+const disabled = ref(false);
+
 // These are reactive modifiers that will automatically update
 // The synth's behavior
 const modifiers = reactive<IModifier[]>([
-
-  // Doesnt work
-  { name: 'octave', shortName: 'OCT', value: 0, min: -4, max: 4, step: 1 },
-
   // Works
+  { name: 'octave', shortName: 'OCT', value: octave, min: -4, max: 4, step: 1 },
   { name: 'semitones', shortName: 'ST', value: semitones, min: -12, max: 12, step: 1 },
-
-  // Works
   { name: 'detune', shortName: 'DET', value: detunePercent, min: -1, max: 1, step: 0.01 },
-
-  // Works
   { name: 'unison', shortName: 'UNI', value: detuneVoices, min: 1, max: 16, step: 1, default: 1 },
-
-  // Doesnt work
-  { name: 'tune', shortName: 'TUNE', value: 0, min: -100, max: 100, step: 1 },
+  { name: 'tune', shortName: 'TUNE', value: tune, min: -100, max: 100, step: 1 },
 
   // Doesnt work
   { name: 'pan', shortName: 'PAN', value: 0, min: -1, max: 1, step: 0.01, percent: true },
 ])
+
+watch([freqSynthFn, disabled], () => {
+  if (disabled.value) {
+    props.setSynthFn(undefined)
+    return
+  }
+  props.setSynthFn(freqSynthFn.value)
+})
 
 onMounted(() => props.setSynthFn(freqSynthFn.value))
 </script>
