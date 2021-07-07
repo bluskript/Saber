@@ -23,40 +23,59 @@ const props = defineProps({
     type: String,
     default: 'CRING',
   },
+  percent: {
+    type: Boolean,
+    default: false,
+  },
 })
+
 const emit = defineEmit(['update:modelValue'])
 const model = useVModel(props, 'modelValue', emit)
-let tmpModel = model.value
 const dragging = ref(false)
+let startY = 0
+let initialValue = 0
 
-const displayValue = computed(() => (props.step || 1) < 1 ? model.value.toFixed(2) : model.value)
+const displayValue = computed(() => {
+  if (props.percent)
+    return `${(model.value * 100).toFixed(0)}%`
+
+  return props.step < 1 ? model.value.toFixed(2) : model.value
+})
 
 // Sets model to 0 if alt is held. Otherwise sets dragging to true.
 const onMouseDown = (e: MouseEvent) => {
-  if (e.altKey)
+  if (e.altKey) {
     model.value = 0
-
-  else
+  }
+  else {
     dragging.value = true
+    startY = e.clientY
+    initialValue = model.value
+  }
 }
 
 const roundNearestStep = (value: number) => {
-  return Math.round(value / props.step) * props.step
+  return Math.ceil(value / props.step) * props.step
 }
 
 const onMove = (e: MouseEvent) => {
   if (!dragging.value) return
   const scale = props.max - props.min
-  // uses the movementY and the scale to calculate the value delta
-  const delta = (e.movementY / 100) * scale
-  if (e.movementY < 0 && model.value < props.max)
-    tmpModel -= delta
-  else if (e.movementY > 0 && model.value > props.min)
-    tmpModel -= delta
-  model.value = roundNearestStep(tmpModel)
+  const distance = startY - e.clientY
+  const val = ((distance * scale) / 200)
+  model.value = Math.min(
+    Math.max(
+      initialValue + roundNearestStep(val),
+      props.min,
+    ),
+    props.max,
+  )
 }
 
-const onMouseUp = () => dragging.value = false
+const onMouseUp = () => {
+  dragging.value = false
+  startY = model.value
+}
 
 watch(dragging, () => {
   if (dragging.value) {
@@ -72,10 +91,10 @@ watch(dragging, () => {
 
 <template>
   <div class="modifier" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
-    <div class="bg-harmonydark-900 p-1">
+    <div class="bg-harmonydark-900 py-0.5 px-1">
       {{ props.label }}
     </div>
-    <div class="bg-harmonydark-800 p-1 text-primary-400">
+    <div class="bg-harmonydark-800 py-0.5 px-1 min-w-16 text-right text-primary-400">
       {{ Math.sign(model) >= 0 ? '+' : null }}{{ displayValue }}
     </div>
   </div>
@@ -83,7 +102,7 @@ watch(dragging, () => {
 
 <style lang="postcss" scoped>
 .modifier {
-  @apply select-none transition duration-100 border-2 border-transparent flex rounded-0.5rem w-min overflow-hidden font-bold text-sabertext;
+  @apply select-none transition duration-100 border-2 border-transparent flex rounded-0.5rem overflow-hidden font-bold text-sabertext;
   cursor: ns-resize;
 
   &:active, &:focus {
