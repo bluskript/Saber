@@ -39,13 +39,17 @@ const buttonClasses = computed(() => ({
   --button-color: theme('colors.red.500');
 }
 
+.plain {
+  --button-color: theme('colors.white');
+}
+
 .btn {
   @apply
     px-4 py-2 rounded focus:outline-none transition duration-200
     ease-in-out flex justify-center
     items-center cursor-pointer select-none text-center;
   &.dense {
-    @apply p-2 rounded-none;
+    @apply p-2;
   }
 
   &.disabled {
@@ -93,10 +97,7 @@ const buttonClasses = computed(() => ({
   @apply border-buttoncolor border-1 text-buttoncolor;
 }
 .text {
-  @apply text-primary-400;
-  &:hover {
-    @apply bg-primary-300 bg-opacity-10;
-  }
+  @apply text-current;
 }
 
 .disabled {

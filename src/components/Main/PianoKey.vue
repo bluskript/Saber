@@ -21,24 +21,24 @@ const keyProps = computed(() => ({
 
 <style lang="postcss" scoped>
 .key {
-  @apply h-full w-16 outline-none border-gray-500 cursor-pointer flex-shrink-0;
+  @apply h-full w-16 outline-none border-gray-500 dark:border-harmonydark-900 cursor-pointer flex-shrink-0;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .white {
-  @apply bg-white;
+  @apply bg-white dark:bg-harmonydark-300;
 
   &.heldDown {
-    @apply bg-gray-300;
+    @apply bg-gray-300 dark:bg-primary-300;
   }
 }
 
 .black {
-  @apply bg-black w-8 h-24 -ml-8 z-2;
+  @apply bg-black dark:bg-harmonydark-900 w-8 h-24 -ml-8 z-2;
 
   &.heldDown {
-    @apply bg-dark-100;
+    @apply bg-dark-100 dark:bg-primary-200;
   }
 }
 
