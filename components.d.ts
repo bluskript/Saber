@@ -8,13 +8,13 @@ declare module 'vue' {
     HBtnGroup: typeof import('./src/components/HBtnGroup.vue')['default']
     HSlider: typeof import('./src/components/HSlider.vue')['default']
     HSpacer: typeof import('./src/components/HSpacer.vue')['default']
-    FourierVisualizer: typeof import('./src/components/Main/FourierVisualizer.vue')['default']
-    FrequencyView: typeof import('./src/components/Main/FrequencyView.vue')['default']
+    FourierVisualizer: typeof import('./src/components/Main/FlexZone/FourierVisualizer.vue')['default']
+    Spectrum: typeof import('./src/components/Main/FlexZone/Spectrum.vue')['default']
     Keyboard: typeof import('./src/components/Main/Keyboard.vue')['default']
     NavBar: typeof import('./src/components/Main/NavBar.vue')['default']
     Oscillator: typeof import('./src/components/Main/Oscillator.vue')['default']
     PianoKey: typeof import('./src/components/Main/PianoKey.vue')['default']
-    SynthDisplay: typeof import('./src/components/Main/SynthDisplay.vue')['default']
+    SynthDisplay: typeof import('./src/components/Main/FlexZone/Waveform.vue')['default']
   }
 }
 

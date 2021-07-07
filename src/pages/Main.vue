@@ -3,8 +3,8 @@ import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
 import Oscillator from '../components/Main/Oscillator.vue'
-import FourierVisualizer from '../components/Main/FourierVisualizer.vue'
-import SynthDisplay from '../components/Main/SynthDisplay.vue'
+import FourierVisualizer from '../components/Main/FlexZone/FourierVisualizer.vue'
+import SynthDisplay from '../components/Main/FlexZone/Waveform.vue'
 import { applyVolume, combine } from '~/logic/synths'
 import type { SynthFn } from '~/logic/synths'
 import { keys } from '~/logic/keysound'
@@ -14,7 +14,7 @@ import Keyboard from '~/components/Main/Keyboard.vue'
 import { OscManager } from '~/logic/oscManager'
 import { setSampleRate } from '~/logic/sampleRate'
 import { useFourier } from '~/logic/useFourier'
-import FrequencyView from '~/components/Main/FrequencyView.vue'
+import FrequencyView from '~/components/Main/FlexZone/Spectrum.vue'
 
 let ctx: AudioContext
 
@@ -76,7 +76,7 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
   >
     <div class="grid grid-cols-2 gap-2 mb-2">
       <SynthDisplay :fn="synthFn" class="mb-2" />
-      <FrequencyView :fourier-arr="fourierArr" />
+      <Spectrum :fourier-arr="fourierArr" />
     </div>
     <div class="grid md:grid-cols-2 auto-rows-fr gap-2">
       <Card>

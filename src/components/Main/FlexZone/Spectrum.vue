@@ -20,7 +20,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card class="flex flex-col">
+  <TitleCard class="flex flex-col">
+    <template #header>
+      <h1 class="w-full text-xl font-bold">
+        Spectrum
+      </h1>
+    </template>
     <canvas ref="viewerCanvas" class="w-full flex-1 max-h-50" />
-  </Card>
+  </TitleCard>
 </template>

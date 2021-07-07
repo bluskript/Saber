@@ -34,7 +34,7 @@ export default defineConfig({
           900: '#08080D',
         },
         buttoncolor: 'var(--button-color)',
-        textcolor: 'var(--text-color)',
+        sabertext: '#ADADD8',
       },
     },
   },
