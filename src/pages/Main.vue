@@ -26,6 +26,7 @@ if (!import.meta.env.SSR) {
 let position = 0
 
 const volume = ref(0.2)
+const pianoOpen = ref(false)
 const sampleSize = ref(11)
 const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
 
@@ -71,8 +72,15 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 </script>
 
 <template>
+  <Keyboard
+    v-show="pianoOpen"
+    v-model="pianoOpen"
+    :keys-down="oscManager.semitonesDown"
+    :key-down="(i) => oscManager.semitoneDown(i)"
+    :key-up="(i) => oscManager.semitoneUp(i)"
+  />
   <div
-    class="p-2 h-full"
+    class="p-3"
   >
     <div class="grid grid-cols-2 gap-2 mb-2">
       <SynthDisplay :fn="synthFn" class="mb-2" />
@@ -91,6 +99,10 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
             <HSlider v-model="volume" min="0" max="1" step="0.01" label="Master Volume" />
           </div>
         </div>
+        <HBtn variant="outlined" color="primary" class="mb-3" @click="pianoOpen = !pianoOpen">
+          <mdi-keyboard />
+          <span class="ml-1">Toggle Piano</span>
+        </HBtn>
         <div class="flex">
           <div class="bg-light-400 p-3 dark:bg-harmonydark-100 overflow-auto flex flex-col gap-2 w-24">
             <HBtn
@@ -133,9 +145,4 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
       <FourierVisualizer :synth-fn="synthFn" :fourier-arr="fourierArr" />
     </div>
   </div>
-  <Keyboard
-    :keys-down="oscManager.semitonesDown"
-    :key-down="(i) => oscManager.semitoneDown(i)"
-    :key-up="(i) => oscManager.semitoneUp(i)"
-  />
 </template>
