@@ -15,7 +15,6 @@ defineProps<{
 <style lang="postcss" scoped>
 .btn {
   @apply transition duration-200 cursor-pointer border-2 flex items-center rounded w-min p-2;
-
   &:not(.active) {
     @apply text-secondary-300 border-transparent bg-harmonydark-800;
   }

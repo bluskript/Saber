@@ -3,7 +3,6 @@ import { computed, defineProps, onMounted, ref, watch, reactive } from '@vue/run
 import { applyVolume, detuned, sawTooth, sine, square, triangle } from '~/logic/synths'
 import type { FreqSynthFn } from '~/logic/synths'
 import HBtn from '~/components/HBtn.vue'
-
 const props = defineProps<{
   setSynthFn: (fn?: FreqSynthFn) => void
   delete: () => void
@@ -27,14 +26,7 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
   if (!freqSynthFn) return
   return (freq) => {
     freq *= Math.pow(2, ((semitones.value / 12) + octave.value + tune.value / (12 * 100)))
-    return applyVolume(
-      detuned(
-        freqSynthFn,
-        detuneVoices.value,
-        detunePercent.value,
-      )(freq, 0),
-      volume.value,
-    )
+    return applyVolume(detuned(freqSynthFn,detuneVoices.value,detunePercent.value,)(freq, 0), volume.value)
   }
 })
 
@@ -44,6 +36,7 @@ import Saw from '~/assets/icons/saw.svg?component'
 import Square from '~/assets/icons/square.svg?component'
 import Sine from '~/assets/icons/sine.svg?component'
 import Triangle from '~/assets/icons/triangle.svg?component'
+import Trash from '~/assets/icons/trashcan.svg?component'
 
 // Make a table of all the waveforms with a value 
 // So that when we cast a click the v-model updates to the value
@@ -67,7 +60,7 @@ interface IModifier {
 }
 
 // Initialize default values as reactive elements
-const volume = ref(0.5);
+const volume = ref(0.8);
 const semitones = ref(0);
 const detunePercent = ref(0);
 const octave = ref(0);
@@ -84,9 +77,12 @@ const modifiers = reactive<IModifier[]>([
   { name: 'detune', shortName: 'DET', value: detunePercent, min: -1, max: 1, step: 0.01 },
   { name: 'unison', shortName: 'UNI', value: detuneVoices, min: 1, max: 16, step: 1, default: 1 },
   { name: 'tune', shortName: 'TUNE', value: tune, min: -100, max: 100, step: 1 },
+  { name: 'volume', shortName: 'VOL', value: volume, min: 0, max: 1, step: 0.01, default: 0.80 },
 
-  // Doesnt work
-  { name: 'pan', shortName: 'PAN', value: 0, min: -1, max: 1, step: 0.01, percent: true },
+  // Doesnt work yet because apparently blusk decided to make the entire synth have a single
+  // Process meaning you can't pan each osc
+  // Make each oscillator its own process?
+  // { name: 'pan', shortName: 'PAN', value: 0, min: -1, max: 1, step: 0.01, percent: true },
 ])
 
 watch([freqSynthFn, disabled], () => {
@@ -101,56 +97,29 @@ onMounted(() => props.setSynthFn(freqSynthFn.value))
 </script>
 
 <template>
-  <div :class="{ disabled }">
-    <div class="flex gap-2 mb-3 flex-wrap">
-      <!-- Waveform buttons -->
-      <SquareBtnToggle v-model="selectedSynthName" :waveforms="waveforms" />
+  <div class="bg-harmonydark-700 rounded-8px flex overflow-hidden" :class="{ disabled }">
+    <div class="flex gap-2 p-2 w-full">
+      <div class="flex flex-col gap-2 flex-wrap">
+        <SquareBtnToggle v-model="selectedSynthName" :waveforms="waveforms" />
+      </div>
+      <Modifiers :modifiers="modifiers" />
     </div>
-    <Modifiers :modifiers="modifiers" />
 
-    <HSlider
-      v-model="volume"
-      label="Volume"
-      class="mb-2"
-      min="0"
-      max="1"
-      step="0.01"
-    />
-    <HSlider
-      v-model="semitones"
-      label="Semitones"
-      min="-24"
-      max="24"
-      step="1"
-      class="mb-2"
-    />
-    <HSlider
-      v-model="detunePercent"
-      label="Detune percent"
-      min="0"
-      max="1"
-      step="0.01"
-      class="mb-2"
-    />
-    <HSlider
-      v-model="detuneVoices"
-      label="Detune Voices"
-      min="1"
-      max="12"
-      step="1"
-      class="mb-2"
-    />
+    <div class="banner p-2 bg-harmonydark-400 flex flex-col justify-between">
+      <div @click="disabled = !disabled" :class="{disabled}" class="soloButton cursor-pointer rounded-full w-5 h-5 bg-primary-400"></div>
+    
+      <Trash class="cursor-pointer" @click="props.delete" />
+    </div>
   </div>
-  <HBtn class="mt-3" variant="outlined" color="secondary" @click="disabled = !disabled">
-    {{ disabled ? 'Enable Osc' : 'Disable Osc' }}
-  </HBtn>
-  <HBtn class="mt-3" variant="outlined" color="error" :disabled="!deleteEnabled" @click="props.delete">
-    Delete Osc
-  </HBtn>
 </template>
 
 <style lang="postcss" scoped>
 .disabled {
-  @apply pointer-events-none opacity-30;
+  @apply pointer-events-none opacity-30 ;
 }
+
+.soloButton.disabled {
+  @apply bg-gray-400 pointer-events-auto;
+}
+
 </style>

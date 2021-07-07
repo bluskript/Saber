@@ -19,7 +19,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="flex-1 h-min">
+  <div class="flex-1 h-full overflow-hidden rounded bg-harmonydark-900">
     <div class="p-1 gap-1 bg-harmonydark-500 rounded flex">
       <Modifier
         v-for="mod of props.modifiers"

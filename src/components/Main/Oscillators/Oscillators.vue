@@ -60,7 +60,8 @@ onMounted(async() => {
     synthFn.value?.(targetChannel, position, ctx.sampleRate)
     position += outputBuffer.length
   })
-  processor.connect(ctx.destination)
+  const panner = new StereoPannerNode(ctx, {pan: 0});
+  processor.connect(panner).connect(ctx.destination)
 })
 
 onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
@@ -77,25 +78,12 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 <template>
   <Column>
     <template #title>
-      Owo<strong class="text-secondary-300">kill</strong><strong class="text-textcolor">ators</strong>
+      <div class="">
+        Owo<strong class="text-secondary-300">kill</strong><strong class="text-textcolor">ators</strong>
+      </div>
+      <carbon-add class="w-8 h-8 cursor-pointer" @click="() => oscManager.addOsc()"/>
     </template>
-    <HBtn
-      variant="text"
-      class="w-full"
-      @click="() => oscManager.addOsc()"
-    >
-      <carbon-add />
-    </HBtn>
-    <div
-      v-for="(id, i) in oscManager.synthArr"
-      v-show="oscManager.selectedOsc.value === id"
-      :key="id"
-      class="w-full bg-light-500 dark:bg-harmonydark-400 p-3 flex-1 block h-full"
-    >
-      <h1 class="text-2xl mb-2">
-        Oscillator {{ i + 1 }}
-      </h1>
-      {{oscManager.setFreqSynthFn(id)}}
+    <div v-for="(id, i) in oscManager.synthArr">
       <Oscillator
         :set-synth-fn="oscManager.setFreqSynthFn(id)"
         :delete="() => oscManager.deleteOsc(i)"
