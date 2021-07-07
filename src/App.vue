@@ -22,7 +22,7 @@ html, body, #app {
 }
 
 #app {
-  font-family: 'Roboto';
+  font-family: 'Space Mono';
   @apply bg-light-50 text-black dark:bg-harmonydark-800 dark:text-white overflow-auto flex flex-col;
 }
 </style>

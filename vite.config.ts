@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     ViteFonts({
       google: {
-        families: ['Roboto'],
+        families: ['Space Mono'],
       },
     }),
 
