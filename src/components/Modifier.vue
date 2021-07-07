@@ -2,26 +2,58 @@
 import { useVModel } from '@vueuse/core'
 import { computed, defineEmit, defineProps, ref, watch } from 'vue'
 
-const props = defineProps<{
-  modelValue: number
-  min?: number
-  max?: number
-  step?: number
-  label?: string
-}>()
+const props = defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
+  },
+  min: {
+    type: Number,
+    default: 0,
+  },
+  max: {
+    type: Number,
+    default: 100,
+  },
+  step: {
+    type: Number,
+    default: 1,
+  },
+  label: {
+    type: String,
+    default: 'CRING',
+  },
+})
 const emit = defineEmit(['update:modelValue'])
 const model = useVModel(props, 'modelValue', emit)
+let tmpModel = model.value
+const dragging = ref(false)
 
 const displayValue = computed(() => (props.step || 1) < 1 ? model.value.toFixed(2) : model.value)
 
-const dragging = ref(false)
+// Sets model to 0 if alt is held. Otherwise sets dragging to true.
+const onMouseDown = (e: MouseEvent) => {
+  if (e.altKey)
+    model.value = 0
+
+  else
+    dragging.value = true
+}
+
+const roundNearestStep = (value: number) => {
+  return Math.round(value / props.step) * props.step
+}
 
 const onMove = (e: MouseEvent) => {
   if (!dragging.value) return
-  if (e.movementY < 0)
-    model.value += props.step || 1
-  else if (e.movementY > 0)
-    model.value -= props.step || 1
+  const scale = props.max - props.min
+  // uses the movementY and the scale to calculate the value delta
+  const delta = (e.movementY / 100) * scale
+  if (e.movementY < 0 && model.value < props.max)
+    tmpModel -= delta
+  else if (e.movementY > 0 && model.value > props.min)
+    tmpModel -= delta
+  model.value = roundNearestStep(tmpModel)
 }
 
 const onMouseUp = () => dragging.value = false
@@ -39,7 +71,7 @@ watch(dragging, () => {
 </script>
 
 <template>
-  <div class="modifier" @mousedown="dragging = true" @mouseup="dragging = false" @mousemove="onMove">
+  <div class="modifier" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
     <div class="bg-harmonydark-900 p-1">
       {{ props.label }}
     </div>

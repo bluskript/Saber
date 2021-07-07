@@ -26,7 +26,7 @@ const octave = ref(0)
     </div>
     <div class="flex-1">
       <div class="p-2 bg-harmonydark-500">
-        <Modifier v-model="octave" label="OCT" />
+        <Modifier v-model="octave" label="OCT" :min="-4" :max="100" />
       </div>
     </div>
   </div>
