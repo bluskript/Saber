@@ -21,11 +21,11 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 <template>
   <div class="h-full w-full bg-harmonydark-900 p-3 flex w-full h-full gap-3 relative">
     <Oscillators />
-    <!-- <Visuals /> -->
+    <Visuals />
   </div>
-  <!-- <Keyboard
+  <Keyboard
     :keys-down="oscManager.semitonesDown"
     :key-down="(i) => oscManager.semitoneDown(i)"
     :key-up="(i) => oscManager.semitoneUp(i)"
-  /> -->
+  />
 </template>

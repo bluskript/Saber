@@ -14,7 +14,7 @@ interface IModifier {
 }
 
 const props = defineProps<{
-  params: IModifier[]
+  modifiers: IModifier[]
 }>()
 </script>
 
@@ -22,15 +22,15 @@ const props = defineProps<{
   <div class="flex-1 h-min">
     <div class="p-1 gap-1 bg-harmonydark-500 rounded flex">
       <Modifier
-        v-for="param of props.params"
-        :key="param.name"
-        v-model="param.value"
-        :label="param.shortName"
-        :min="param.min"
-        :max="param.max"
-        :step="param.step"
-        :percent="param.percent"
-        :default="param.default"
+        v-for="mod of props.modifiers"
+        :key="mod.name"
+        v-model="mod.value"
+        :label="mod.shortName"
+        :min="mod.min"
+        :max="mod.max"
+        :step="mod.step"
+        :percent="mod.percent"
+        :default="mod.default"
       />
     </div>
   </div>

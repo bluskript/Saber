@@ -22,6 +22,7 @@ defineProps<{
 
   &.active {
     @apply bg-primary-100 border-primary-400 text-primary-400;
+    transform: scaleY(-1);
   }
 }
 </style>
