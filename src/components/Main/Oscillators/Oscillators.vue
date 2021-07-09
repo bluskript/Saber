@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import NewOscillator from './NewOscillator.vue'
-import Column from '~/components/Main/Column.vue'
 
 import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { onKeyDown, onKeyUp } from '@vueuse/core'
+import Column from '~/components/Main/Column.vue'
 import Oscillator from '~/components/Main/Oscillators/Oscillator.vue'
 import FourierVisualizer from '~/components/Main/FlexZone/FourierVisualizer.vue'
 import SynthDisplay from '~/components/Main/FlexZone/Waveform.vue'
@@ -14,7 +13,7 @@ import { keys } from '~/logic/keysound'
 import HSlider from '~/components/HSlider.vue'
 import HBtn from '~/components/HBtn.vue'
 import Keyboard from '~/components/Main/Keyboard.vue'
-import { OscManager } from '~/logic/oscManager'
+import { OscManager, oscManager } from '~/logic/oscManager'
 import { setSampleRate } from '~/logic/sampleRate'
 import { useFourier } from '~/logic/useFourier'
 import FrequencyView from '~/components/Main/FlexZone/Spectrum.vue'
@@ -31,8 +30,6 @@ let position = 0
 const volume = ref(0.2)
 const sampleSize = ref(11)
 const actualSampleSize = computed(() => Math.pow(2, sampleSize.value))
-
-const oscManager = new OscManager()
 
 const getSynthForSemitone = (semitone: number): SynthFn => {
   const baseFrequency = 131
@@ -60,7 +57,7 @@ onMounted(async() => {
     synthFn.value?.(targetChannel, position, ctx.sampleRate)
     position += outputBuffer.length
   })
-  const panner = new StereoPannerNode(ctx, {pan: 0});
+  const panner = new StereoPannerNode(ctx, { pan: 0 })
   processor.connect(panner).connect(ctx.destination)
 })
 
@@ -78,10 +75,10 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 <template>
   <Column>
     <template #title>
-      <div class="">
+      <div>
         Owo<strong class="text-secondary-300">kill</strong><strong class="text-textcolor">ators</strong>
       </div>
-      <carbon-add class="w-8 h-8 cursor-pointer" @click="() => oscManager.addOsc()"/>
+      <carbon-add class="w-8 h-8 cursor-pointer" @click="() => oscManager.addOsc()" />
     </template>
     <div v-for="(id, i) in oscManager.synthArr">
       <Oscillator
@@ -90,6 +87,5 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
         :delete-enabled="Object.keys(oscManager.synths).length > 1"
       />
     </div>
-    <!-- <NewOscillator /> -->
   </Column>
 </template>

@@ -91,26 +91,54 @@ watch(dragging, () => {
     document.removeEventListener('mouseup', onMouseUp)
   }
 })
+
+const pop = ref(false)
+
+watch(model, () => {
+  pop.value = true
+  setTimeout(() => pop.value = false, 100)
+})
+
 </script>
 
 <template>
-  <div class="modifier text-sm" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
-    <div class="bg-harmonydark-900 py-0.5 px-1">
+  <div class="modifier" @mousedown.passive="onMouseDown" @mouseup.passive="dragging = false">
+    <div class="select-none bg-harmonydark-900 py-0.5 px-1">
       {{ props.label }}
     </div>
-    <div class="bg-harmonydark-800 py-0.5 px-1 min-w-12 text-right text-primary-400">
-      {{ Math.sign(model) >= 0 ? '+' : null }}{{ displayValue }}
+    <div class="value bg-harmonydark-800 py-0.5 px-1 min-w-12 text-right text-secondary-400">
+      <h1 :class="{pop}">
+        {{ Math.sign(model) >= 0 ? '+' : null }}{{ displayValue }}
+      </h1>
     </div>
   </div>
 </template>
 
 <style lang="postcss" scoped>
+
+@keyframes popAnimation {
+  from {
+    transform: translateY(-1px) scale(1.10);
+  }
+  to {
+    transform: translateY(0px) scale(1);
+  }
+}
+
 .modifier {
-  @apply select-none transition duration-100 border-2 border-transparent flex rounded-0.5rem overflow-hidden font-bold text-sabertext;
+  @apply text-sm select-none transition transform duration-100 border-2 border-transparent flex rounded-0.5rem overflow-hidden font-bold text-sabertext;
   cursor: ns-resize;
 
   &:active, &:focus {
-    @apply border-2 border-primary-400;
+    @apply border-2 border-primary-300 ;
   }
+  &:active .value {
+    @apply text-primary-300 ;
+  }
+
+  & .pop {
+    animation: popAnimation 99ms ease;
+  }
+
 }
 </style>

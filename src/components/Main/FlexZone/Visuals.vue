@@ -8,7 +8,9 @@ import Spectrum from '~/components/Main/FlexZone/Spectrum.vue'
 <template>
   <Column>
     <template #title>
-      Fl<strong class="text-secondary-300">ex</strong><strong class="text-textcolor">Zone</strong>
+      <div>
+        Fl<strong class="text-secondary-300">ex</strong><strong class="text-textcolor">Zone</strong>
+      </div>
     </template>
     <FourierVisualizer :fourier-arr="[]" />
     <Spectrum :fourier-arr="[]" />
