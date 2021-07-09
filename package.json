@@ -7,6 +7,7 @@
     "preview-https": "serve dist"
   },
   "dependencies": {
+    "@types/webmidi": "^2.0.6",
     "@vueuse/core": "^4.11.2",
     "@vueuse/head": "^0.5.1",
     "debounce": "^1.2.1",
