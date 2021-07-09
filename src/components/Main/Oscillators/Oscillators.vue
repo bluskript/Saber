@@ -75,7 +75,7 @@ onKeyUp(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
 <template>
   <Column>
     <template #title>
-      <div class="">
+      <div>
         Owo<strong class="text-secondary-300">kill</strong><strong class="text-textcolor">ators</strong>
       </div>
       <carbon-add class="w-8 h-8 cursor-pointer" @click="() => oscManager.addOsc()" />
