@@ -5,8 +5,9 @@ import { onMounted } from 'vue'
 import Oscillators from '~/components/Main/Oscillators/Oscillators.vue'
 import Visuals from '~/components/Main/FlexZone/Visuals.vue'
 import Keyboard from '~/components/Main/Keyboard.vue'
-import { OscManager } from '~/logic/oscManager'
+import { oscManager } from '~/logic/oscManager'
 import { keys } from '~/logic/keysound'
+import { useMidi } from '~/logic/midi'
 
 onMounted(async() => {
   await init()
@@ -18,7 +19,7 @@ onMounted(async() => {
   }))
 })
 
-const oscManager = new OscManager()
+useMidi()
 
 onKeyDown(ev => keys[ev.key] !== undefined && !ev.repeat, (ev) => {
   oscManager.semitoneDown(keys[ev.key])

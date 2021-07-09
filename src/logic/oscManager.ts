@@ -57,3 +57,5 @@ export class OscManager {
     this.semitonesDown.delete(value)
   }
 }
+
+export const oscManager = new OscManager()

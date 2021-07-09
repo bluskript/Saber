@@ -3,6 +3,14 @@ import { computed, defineProps, onMounted, ref, watch, reactive } from '@vue/run
 import { applyVolume, detuned, sawTooth, sine, square, triangle } from '~/logic/synths'
 import type { FreqSynthFn } from '~/logic/synths'
 import HBtn from '~/components/HBtn.vue'
+
+// Import all the SVG icons as components
+// So we can change their colors with CSS
+import Saw from '~/assets/icons/saw.svg?component'
+import Square from '~/assets/icons/square.svg?component'
+import Sine from '~/assets/icons/sine.svg?component'
+import Triangle from '~/assets/icons/triangle.svg?component'
+import Trash from '~/assets/icons/trashcan.svg?component'
 const props = defineProps<{
   setSynthFn: (fn?: FreqSynthFn) => void
   delete: () => void
@@ -26,19 +34,11 @@ const freqSynthFn = computed<FreqSynthFn | undefined>(() => {
   if (!freqSynthFn) return
   return (freq) => {
     freq *= Math.pow(2, ((semitones.value / 12) + octave.value + tune.value / (12 * 100)))
-    return applyVolume(detuned(freqSynthFn,detuneVoices.value,detunePercent.value,)(freq, 0), volume.value)
+    return applyVolume(detuned(freqSynthFn, detuneVoices.value, detunePercent.value)(freq, 0), volume.value)
   }
 })
 
-// Import all the SVG icons as components
-// So we can change their colors with CSS
-import Saw from '~/assets/icons/saw.svg?component'
-import Square from '~/assets/icons/square.svg?component'
-import Sine from '~/assets/icons/sine.svg?component'
-import Triangle from '~/assets/icons/triangle.svg?component'
-import Trash from '~/assets/icons/trashcan.svg?component'
-
-// Make a table of all the waveforms with a value 
+// Make a table of all the waveforms with a value
 // So that when we cast a click the v-model updates to the value
 const waveforms = [
   { icon: Saw, value: 'saw' },
@@ -60,26 +60,26 @@ interface IModifier {
 }
 
 // Initialize default values as reactive elements
-const volume = ref(0.8);
-const semitones = ref(0);
-const detunePercent = ref(0);
-const octave = ref(0);
-const tune = ref(0);
-const detuneVoices = ref(1);
-const disabled = ref(false);
+const volume = ref(0.8)
+const semitones = ref(0)
+const detunePercent = ref(0)
+const octave = ref(0)
+const tune = ref(0)
+const detuneVoices = ref(1)
+const disabled = ref(false)
 
 // These are reactive modifiers that will automatically update
 // The synth's behavior
 const modifiers = reactive<IModifier[]>([
   { name: 'octave', shortName: 'OCT', value: octave, min: -4, max: 4, step: 1 },
   { name: 'semitones', shortName: 'ST', value: semitones, min: -12, max: 12, step: 1 },
-  { name: 'detune', shortName: 'DET', value: detunePercent, min: -1, max: 1, step: 0.01 },
+  { name: 'detune', shortName: 'DET', value: detunePercent, min: 0, max: 1, step: 0.01 },
   { name: 'unison', shortName: 'UNI', value: detuneVoices, min: 1, max: 16, step: 1, default: 1 },
   { name: 'tune', shortName: 'TUNE', value: tune, min: -100, max: 100, step: 1 },
   { name: 'volume', shortName: 'VOL', value: volume, min: 0, max: 1, step: 0.01, default: 0.80 },
   // { name: 'pan', shortName: 'PAN', value: 0, min: -1, max: 1, step: 0.01, percent: true },
 
-  // The panning doesnt work yet because apparently blusk 
+  // The panning doesnt work yet because apparently blusk
   // Decided to make the entire synth have a single
   // Process meaning you can't pan each osc
   // Make each oscillator its own process?
@@ -106,8 +106,8 @@ onMounted(() => props.setSynthFn(freqSynthFn.value))
     </div>
 
     <div class="banner p-2 bg-harmonydark-400 flex flex-col justify-between">
-      <div @click="disabled = !disabled" :class="{disabled}" class="soloButton cursor-pointer rounded-full w-5 h-5 bg-primary-400"></div>
-    
+      <div :class="{disabled}" class="soloButton cursor-pointer rounded-full w-5 h-5 bg-primary-300" @click="disabled = !disabled"></div>
+
       <Trash class="cursor-pointer" @click="props.delete" />
     </div>
   </div>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
-import Modifier from '~/components/Modifier.vue'
+import Modifier from '~/components/Main/Oscillators/Modifier.vue'
 
 interface IModifier {
   name: string
