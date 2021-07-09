@@ -9,6 +9,7 @@ import WindiCSS from 'vite-plugin-windicss'
 import { VitePWA } from 'vite-plugin-pwa'
 import VueI18n from '@intlify/vite-plugin-vue-i18n'
 import ViteFonts from 'vite-plugin-fonts'
+import ViteRsw from 'vite-plugin-rsw'
 import svgLoader from 'vite-svg-loader'
 
 export default defineConfig({
@@ -18,6 +19,12 @@ export default defineConfig({
     },
   },
   plugins: [
+    ViteRsw({
+      crates: [
+        'saber-engine'
+      ]
+    }),
+
     ViteFonts({
       google: {
         families: ['Space Mono'],

@@ -21,6 +21,7 @@ declare module 'vue' {
     Visuals: typeof import('./src/components/Main/FlexZone/Visuals.vue')['default']
     Waveform: typeof import('./src/components/Main/FlexZone/Waveform.vue')['default']
     Footer: typeof import('./src/components/Main/Footer/Footer.vue')['default']
+    Modifiers: typeof import('./src/components/Main/Oscillators/Modifiers.vue')['default']
     NewOscillator: typeof import('./src/components/Main/Oscillators/NewOscillator.vue')['default']
     Oscillator: typeof import('./src/components/Main/Oscillators/Oscillator.vue')['default']
     Oscillators: typeof import('./src/components/Main/Oscillators/Oscillators.vue')['default']

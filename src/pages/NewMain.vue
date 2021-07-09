@@ -1,10 +1,22 @@
 <script lang="ts" setup>
 import { onKeyDown, onKeyUp } from '@vueuse/core'
+import init, { SynthProcessor, Config } from 'saber-engine'
+import { onMounted } from 'vue'
 import Oscillators from '~/components/Main/Oscillators/Oscillators.vue'
 import Visuals from '~/components/Main/FlexZone/Visuals.vue'
 import Keyboard from '~/components/Main/Keyboard.vue'
 import { OscManager } from '~/logic/oscManager'
 import { keys } from '~/logic/keysound'
+
+onMounted(async() => {
+  await init()
+  const ctx = new AudioContext()
+  const processor = SynthProcessor.new(ctx.sampleRate)
+
+  console.log(Config.from_json({
+    oscillators: [],
+  }))
+})
 
 const oscManager = new OscManager()
 

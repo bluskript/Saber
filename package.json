@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "vite --port 3333 --open",
-    "build": "cross-env NODE_ENV=production vite-ssg build",
+    "dev": "vite --port 3333",
+    "build": "vuedx-typecheck . && cross-env NODE_ENV=production vite-ssg build",
     "preview": "vite preview",
     "preview-https": "serve dist"
   },
@@ -26,6 +26,8 @@
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.11",
     "@vue/server-renderer": "^3.0.11",
+    "@vuedx/typecheck": "^0.7.4",
+    "@vuedx/typescript-plugin-vue": "^0.7.4",
     "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
     "https-localhost": "^4.6.5",
@@ -38,6 +40,7 @@
     "vite-plugin-icons": "^0.6.0",
     "vite-plugin-pages": "^0.12.2",
     "vite-plugin-pwa": "^0.7.3",
+    "vite-plugin-rsw": "^1.6.5",
     "vite-plugin-vue-layouts": "^0.3.1",
     "vite-plugin-windicss": "^0.16.7",
     "vite-ssg": "^0.11.2",
